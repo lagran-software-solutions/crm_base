@@ -1,0 +1,134 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% if request.user.is_admin %}
+{% block navactive1 %}dashboardactive {% endblock %}
+{% block navactive11 %}dashboardactive {% endblock %}
+{% else %}
+{% block navactive3 %}dashboardactive {% endblock %}
+{% endif %}
+
+{% block nav %}
+
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+<!-- Main Content -->
+<div id="main-content" class="p-4">
+  <!-- Button Container -->
+  <div class="button-container">
+    <ul class="nav nav-tabs">
+      {% if request.user.is_admin %}
+      <a href="{% url 'dashboard' user_id=0 user_type='all' status_type='all_request' %}"
+      class="btn btn-outline-primary {% if request.path|last_segment == 'all_request' %}active{% endif %} mb-2 me-4">Total Requests</a>
+      <a href="{% url 'client_dashboard' %}" class="btn btn-outline-primary {% if request.path == '/client/service-dashboard' %}active{% endif %} mb-2 me-4">Task</a>
+      <a href="{% url 'dashboard' user_id=request.user.id user_type='all' status_type='my_works' %}" class="btn btn-outline-primary {% if request.path|last_segment == 'my_works' %}active{% endif %} mb-2 me-4">My Task</a>
+
+      <div class="dropdown">
+        <!-- Button that displays the active status -->
+        <button class="btn btn-outline-primary dropdown-toggle mb-2 me-4" type="button" id="requestDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Status
+        </button>
+        
+        <!-- Dropdown menu items -->
+        <ul class="dropdown-menu" aria-labelledby="requestDropdown">
+          <li>
+            <a class="dropdown-item" 
+               href="{% url 'dashboard' user_id=0 user_type='all' status_type='all_request' %}">
+              Total Requests
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" 
+               href="{% url 'dashboard' user_id=0 user_type='all' status_type='in_progress' %}">
+               Pending Requests
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" 
+               href="{% url 'dashboard' user_id=0 user_type='all' status_type='completed' %}">
+               Completed
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item" 
+               href="{% url 'dashboard' user_id=0 user_type='all' status_type='empty' %}">
+               Empty
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item {% if request.path|last_segment == 'cancelled' %}active{% endif %}" 
+               href="{% url 'dashboard' user_id=0 user_type='all' status_type='cancelled' %}">
+               Cancelled
+            </a>
+          </li>
+    
+        </ul>
+      </div>
+
+      <a href="{% url 'client_complaints' %}" class="btn btn-outline-primary mb-2 me-4">Complaints</a>
+      <li class="nav-item">
+        <button type="submit" class="send-request">Create Task</button>
+      </li>
+      {% else %}
+      <a href="{% url 'client_dashboard' %}" class="btn btn-outline-primary active mb-2 me-4">Services</a>
+      <a href="{% url 'client_request' %}" class="btn btn-outline-primary mb-2 me-4">Requests</a>
+      <a href="{% url 'complaint' %}" class="btn btn-outline-primary mb-2 me-4">Complaint</a>
+      
+      <li class="nav-item">
+        <button type="submit" id="createTaskButton" class="send-request" disabled>Create Task</button>
+    </li>
+      {% endif %}
+    </ul>
+  </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="container mt-4">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Services</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in object_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <strong class="service-heading">{{ service.name }}</strong>
+                                <hr class="section-divider" />
+                                <ul class="list-unstyled mb-0">
+                                    {% for sub_service in service.sub_service.all %}
+                                    <li>{{ sub_service.name }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                            <td class="align-middle">
+                                <input type="checkbox" class="form-check-input sub-title-checkbox" name="services" value="{{ service.id }}" />
+                                <div class="checkbox-group mt-2">
+                                    {% for sub_service in service.sub_service.all %}
+                                    <input type="checkbox" class="form-check-input data-checkbox" name="sub_services" value="{{ sub_service.id }}" />
+                                    {% endfor %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+             
+            </div>
+        </div>
+    </div>
+    
+  </div>
+</form>
+
+
+
+{% endblock %}

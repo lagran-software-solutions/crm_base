@@ -1,0 +1,204 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive12 %}dashboardactive{% endblock %}
+{% block content %}
+
+
+<style>
+  .table-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .action-icons i {
+    font-size: 18px;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+
+  .action-icons .edit {
+    color: #007bff;
+  }
+
+  .action-icons .delete {
+    color: #dc3545;
+  }
+</style>
+
+<div id="main-content" class="p-4">
+
+
+  <div class="container-fluid mt-5">
+    <div class="row">
+      <div class="col-12">
+        <!-- Search and Delete Section -->
+        <div class="d-flex justify-content-between align-items-center mb-3" >
+          
+          
+          <div class="dropdown me-4">
+            <a href="{% url 'invoicerecord_form' %}" class="btn btn-success btn-sm">Create Invoice</a>
+            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              {% if status == 'all' %} Filter by Status
+              {% elif status == 'paid' %} Paid
+              {% elif status == 'pending' %} Pending
+              {% elif status == 'cancelled' %} Cancelled
+              {% elif status == 'empty' %} Empty
+              {% else %} Filter by Status
+              {% endif %}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="statusDropdown">
+                <li><a class="dropdown-item" href="{% url 'invoice_list' 'all' %}">All</a></li>
+                <li><a class="dropdown-item" href="{% url 'invoice_list' 'paid' %}">Paid</a></li>
+                <li><a class="dropdown-item" href="{% url 'invoice_list' 'pending' %}">Pending</a></li>
+                <li><a class="dropdown-item" href="{% url 'invoice_list' 'cancelled' %}">Cancelled</a></li>
+                <li><a class="dropdown-item" href="{% url 'invoice_list' 'empty' %}">Empty</a></li>
+            </ul>
+        </div>
+
+          <div class="table-actions">
+            <input type="text" id="search-input" class="form-control w-50" placeholder="Search by Invoice Number">
+            <form id="delete-form" method="post" action="{% url 'invoice_list' status %}">
+              {% csrf_token %}
+              <button type="button" class="btn btn-danger btn-sm" id="delete-selected" style="height: 36px;">Delete Selected</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive">
+          <table class="table table-hover request-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="select-all"></th>
+                <th>S.No</th>
+                <th>Invoice Id.</th>
+                <th>name</th>
+                <th>Address</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              {% for obj in object_list %}
+              <tr>
+                <td><input type="checkbox" class="row-checkbox" value="{{ obj.id }}" name="selected_ids"></td>
+                <td>{{forloop.counter}}</td>
+                <td>{{obj.invoice_number}}</td>
+                <td>{{obj.receiver_name}}</td>
+                <td>{{obj.receiver_address}}</td>
+                <td>₹{{obj.total_amount}}</td>
+                <td>{{obj.invoice_date}}</td>
+                <td>
+                  <form method="POST" action="{% url 'invoice_list' status %}">
+                      {% csrf_token %}
+                      <input type="hidden" name="invoice_id" value="{{ obj.id }}">
+                      <select name="status" class="form-select" onchange="this.form.submit()" style="
+                      color: 
+                      {% if obj.status == 'empty' %} #797272; {% elif obj.status == 'pending' %} #ffc107; {% elif obj.status == 'paid' %} #198754; /* Green */
+                      {% elif obj.status == 'cancelled' %} #dc3545; {% else %} #ffffff; {% endif %}; font-weight: 600;" >
+                      <option value="empty" {% if obj.status == "empty" %}selected{% endif %} style="color: #6c757d;">Empty</option>
+                      <option value="pending" {% if obj.status == "pending" %}selected{% endif %} style="color: #ffc107;">Pending</option>
+                      <option value="paid" {% if obj.status == "paid" %}selected{% endif %} style="color: #198754;">Paid</option>
+                      <option value="cancelled" {% if obj.status == "cancelled" %}selected{% endif %} style="color: #dc3545;">Cancelled</option>
+                  </select>
+                  </form>
+              </td>
+              
+                <td class="action-icons">
+                  <a href="{% url 'invoicerecord_update' obj.id %}"><i class="bi bi-pencil-square edit" title="Edit"></i></a>
+                  <a href="{% url 'invoice_preview' obj.id %}"><i class="bi bi-eye preview" title="preview"></i></a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Search Functionality
+    document.getElementById('search-input').addEventListener('keyup', function () {
+      const searchValue = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#table-body tr');
+
+      rows.forEach(row => {
+        const rowText = row.textContent.toLowerCase();
+        if (rowText.includes(searchValue)) {
+          row.style.display = '';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const deleteForm = document.getElementById('delete-form');
+  
+      if (!deleteForm) {
+          console.error("Delete form with ID 'delete-form' not found.");
+          return;
+      }
+  
+      const selectAll = document.getElementById('select-all');
+      const checkboxes = document.querySelectorAll('.row-checkbox');
+  
+      selectAll.addEventListener('change', () => {
+          checkboxes.forEach(checkbox => checkbox.checked = selectAll.checked);
+      });
+  
+      document.getElementById('delete-selected').addEventListener('click', () => {
+          const selectedIds = Array.from(checkboxes)
+              .filter(checkbox => checkbox.checked)
+              .map(checkbox => checkbox.value);
+  
+          if (selectedIds.length > 0) {
+              if (confirm('Are you sure you want to delete the selected invoices?')) {
+                  deleteForm.querySelectorAll('input[name="selected_ids[]"]').forEach(input => input.remove());
+  
+                  // Add new hidden inputs for selected IDs
+                  selectedIds.forEach(id => {
+                      const hiddenInput = document.createElement('input');
+                      hiddenInput.type = 'hidden';
+                      hiddenInput.name = 'selected_ids[]';
+                      hiddenInput.value = id;
+                      deleteForm.appendChild(hiddenInput);
+                  });
+  
+                  deleteForm.submit();
+              }
+          } else {
+              alert('Please select at least one invoice to delete.');
+          }
+      });
+  });
+  
+  
+  </script>
+
+
+  <script>
+    function updateStatus(invoiceId, status) {
+        const formData = new FormData();
+        formData.append('invoice_id', invoiceId);
+        formData.append('status', status);
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+        fetch("{% url 'invoice_list' status %}", {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+            location.reload(); // Reload the page to see updated status
+        })
+        .catch(error => console.error('Error:', error));
+    }
+</script>
+  {% endblock %}

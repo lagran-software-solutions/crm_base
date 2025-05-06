@@ -1,0 +1,171 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load custom_filters %}
+{% block navactive1 %}dashboardactive {% endblock %}
+{% block nav %}
+  <!-- Main Content -->
+  <div id="main-content" class="p-4">
+    <!-- Button Container -->
+    <div class="button-container">
+      <ul class="nav nav-tabs">
+        <form method="post" action="{% url 'client_complaints' %}" style="width: 100%;" id="complaint_filter_form">
+          <ul class="nav nav-tabs">
+            {% csrf_token %}
+            <div class="me-2">
+            {{filter_form.client_name}}
+            </div>
+    
+            <div class="me-2">
+              <div class="input-group">
+                <input name="complaint_from_date" type="text" id="complaint_from_date" class="form-control" placeholder="From Date"
+                  onfocus="(this.type='date')" onblur="(this.type='text')"
+                  value="{% if filter_form.complaint_from_date.value %}{{ filter_form.complaint_from_date.value }}{% endif %}" / style="width: 120px;">
+    
+              </div>
+            </div>
+            <div class="me-2">
+              <div class="input-group">
+                <input name="complaint_to_date" type="text" id="complaint_to_date" class="form-control" placeholder="To Date"
+                  onfocus="(this.type='date')" onblur="(this.type='text')"
+                  value="{% if filter_form.complaint_to_date.value %}{{ filter_form.complaint_to_date.value }}{% endif %}" / style="width: 120px;">
+              </div>
+            </div>
+
+            <a href="{% url 'dashboard' user_id=0 user_type='all' status_type='all_request' %}"
+            class="btn btn-outline-primary {% if request.path == '/bfs_admin/request_service/all_request' %}active{% endif %} mb-2 me-4">Total
+            Requests</a>
+          <a href="{% url 'dashboard' user_id=0 user_type='all' status_type='in_progress' %}"
+            class="btn btn-outline-primary {% if request.path == '/bfs_admin/request_service/in_progress' %}active{% endif %} mb-2 me-4">Pending
+            Request</a>
+          {% if not request.user.is_superuser %}
+          <a href="{% url 'client_dashboard' %}"
+            class="btn btn-outline-primary {% if request.path == 'client/service-dashboard' %}active{% endif %} mb-2 me-4">Task</a>
+          <a href="{% url 'client_request_dashboard' 'my_works' %}"
+            class="btn btn-outline-primary {% if request.path == '/bfs_admin/client_request_service/my_works' %}active{% endif %} mb-2 me-4">My
+            Task</a>
+          {% endif %}
+          <a href="{% url 'dashboard' user_id=0 user_type='all' status_type='completed' %}"
+            class="btn btn-outline-primary {% if request.path == '/bfs_admin/request_service/completed' %}active{% endif %} mb-2 me-4">Completed</a>
+          <a href="{% url 'client_complaints' %}" class="btn btn-outline-primary {% if request.path == '/bfs_admin/complaints' %}active{% endif %} mb-2 me-4">Complaints</a>
+          
+          <a href="{% url 'dashboard' user_id=0 user_type='all' status_type='piechart_dashboard' %}" class="btn btn-outline-primary {% if request.path|last_segment == 'piechart_dashboard' %}active{% endif %}  mb-2 me-4">
+            <i class="fas fa-chart-pie me-1"></i> Piechart View
+          </a>
+      </ul>
+    </form>
+    </div>
+    {% endblock %}
+
+
+{% block content %}
+<div class="container-fluid mt-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table request-table">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Client Name</th>
+              <th>Date</th>
+              <th>Subject</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for obj in object_list %}
+            <tr>
+              <td>{{forloop.counter}}</td>
+              <td>{{obj.user.get_full_name}}</td>
+              <td>{{ obj.created_at|date:"Y-m-d" }}</td>
+              <td>{{obj.subject}}</td>
+              <td>{{obj.message}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="dt--bottom-section d-sm-flex justify-content-sm-between text-center">
+    <div class="dt--pages-count mb-sm-0 mb-3">
+      <div class="dataTables_info" id="show-hide-col_info" role="status" aria-live="polite">
+        Showing page {{ page_obj.number }} of {{ paginator.num_pages }}
+      </div>
+    </div>
+
+    <div class="dt--pagination">
+      <div class="dataTables_paginate paging_simple_numbers">
+        <ul class="pagination">
+          {% if is_paginated %}
+            <!-- Previous Page -->
+            {% if page_obj.has_previous %}
+            <li class="paginate_button page-item previous">
+              <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-controls="show-hide-col">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-arrow-left">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </a>
+            </li>
+            {% else %}
+            <li class="paginate_button page-item previous disabled">
+              <a class="page-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-arrow-left">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg></a>
+            </li>
+            {% endif %}
+    
+            <!-- Page Numbers -->
+            {% for num in paginator.page_range %}
+            <li class="paginate_button page-item {% if page_obj.number == num %}active{% endif %}">
+              <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+            </li>
+            {% endfor %}
+    
+            <!-- Next Page -->
+            {% if page_obj.has_next %}
+            <li class="paginate_button page-item next">
+              <a href="?page={{ page_obj.next_page_number }}" class="page-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-arrow-right">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </li>
+            {% else %}
+            <li class="paginate_button page-item next disabled">
+              <a class="page-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-arrow-right">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg></a>
+            </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+
+</div>
+
+
+<script>
+  const filterForm = document.getElementById('complaint_filter_form');
+  document.querySelectorAll('#complaint_filter_form input').forEach(input => {
+    input.addEventListener('change', () => {
+      filterForm.submit();
+    });
+  });
+</script>
+{% endblock %}

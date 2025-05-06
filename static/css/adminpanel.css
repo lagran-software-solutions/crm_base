@@ -1,0 +1,377 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+.folder_display{
+  display: flex;
+  gap: 8px;
+}
+
+.sidebar {
+  width: 250px;
+  background-color:#404042;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding:0px;
+}
+
+.admin-info {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.admin-pic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+}
+
+.nav ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.nav ul li {
+  width: 100%;
+  margin-bottom: 10px;
+}
+.fa-user:before {
+  content: "\f007";
+  color: #ffff;
+}
+.nav ul li a {
+  text-decoration: none;
+  color: #000000;
+  padding: 10px;
+  display: block;
+  background-color: #ffffff;
+  text-align: center;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.nav ul li a:hover {
+  background-color: #555;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+.icon-text-gap p{
+  text-decoration: none;
+}
+header {
+  margin-bottom: 20px;
+}
+
+header h1 {
+  margin: 0;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.upload-section{
+  width: 45%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.upload-section input {
+  display: block;
+  margin-bottom: 10px;
+}
+.dashboard {
+    display: flex;
+}
+
+.file-table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+}
+.file-table th, .file-table td {
+border: 1px solid #ddd;
+padding: 8px;
+text-align: left;
+}
+.file-table th {
+background-color: #f2f2f2;
+font-size: 13px;
+}
+.file-actions {
+text-align: center;
+}
+.sidebar {
+    width: 350px;
+    background: #222121;
+    transition: transform 0.3s ease-in-out;
+}
+.sidebar.active {
+    transform: translateX(-300px); /* Move sidebar off-screen */
+}
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+.hidden {
+    display: none;
+}
+header {
+    background-color: #9ad4e8;
+    color: #222121;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px;
+}
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding: 0px;
+}
+.user-info {
+    text-align: right;
+}
+.user-info span {
+    margin-left: 10px;
+}
+.icon-container {
+  margin-left: -55px;
+  margin-right: 0px;
+}
+.icon-container i {
+    color: #222121;
+    margin-left: -55px;
+}
+.content #dashboard-section h2,p{
+  text-decoration: none;
+}
+.sidepanel{
+  margin-left: -50px;
+}
+.sidebar-header {
+  background-color: rgb(54, 131, 164);
+  color: rgb(255, 252, 252);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0px;
+  top: 10px;
+  margin-left: 0px;
+  width: 89%;
+  padding: 5px 20px;
+}
+.sidebar-header p {
+    color: rgb(250, 247, 247);
+    text-decoration: none;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 18px;
+    text-align: center;
+    margin-top: -5px;
+    margin-left: 55%;
+    width: 100%;
+}
+.icon-container a{
+    text-decoration: none;
+    color: #222121;
+    margin-right: 10px;
+}
+.sidebar p {
+  text-align: center;
+  margin-top: -20px;
+  padding-bottom: 15px;
+  margin-left: 40px;
+  text-decoration: none;
+  color: #fff;
+}
+.icon-container p {
+  margin-left: -25px;
+  text-decoration: none;
+  color: rgb(250, 247, 247);
+  display: flex;
+  text-align: center;
+  margin-top: -18px;
+  justify-content: space-around;
+}
+.client_panel i{
+  text-align: center;
+  margin-left: 75px;
+  margin-top: 10px;
+}
+.client_panel p{
+  text-align: center;
+  margin-top: -18px;
+  margin-left: 70px;
+}
+.humburger-user-info .icon-container {
+    display: none;
+}
+
+@media (max-width: 768px) {
+.side_panel p{
+  text-align: center;
+}
+.icon-text-gap p{
+  text-decoration: none;
+  margin-left: -45px!important;
+}
+.sidepanel{
+  margin-left: 20px!important;
+}
+.client_panel i{
+  text-align: center;
+  margin-left: 75px;
+  margin-top: 10px;
+}
+.client_panel p{
+  text-align: center;
+  margin-top: -18px;
+  margin-left: 0px;
+}
+    .humburger-user-info .icon-container {
+    display: block;
+    text-align: left;
+    margin-left: -330px!important;
+    margin-top: 75px;
+}
+.folder_display{
+  display: flex;
+  gap: 8px;
+  size: small;
+}
+.folder i, .file i {
+	font-size: 35px;
+	margin-bottom: 5px;
+}
+.folder, .file {
+	width: 85px!important;
+	height: 100px!important;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+.file-table th {
+  background-color: #f2f2f2;
+  font-size: 13px;
+  }
+.icon-container a{
+    text-decoration: none;
+    color: rgb(250, 247, 247);
+    margin-left:-75px;
+}
+.sidebar-header {
+  background-color: #3683a4;
+  color: #fffcfc;
+  padding: 5px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -20px;
+  top: 10px;
+  margin-left: -40px;
+  width: 100%;
+}
+.sidebar-header h2 {
+  text-decoration: none;
+  text-align: center;
+}
+.sidebar-header p {
+    color: rgb(250, 247, 247);
+    text-decoration: none;
+    font-family: sans-serif;
+    font-size: 18px;
+    text-align: center;
+    margin-top: -15px;
+    width: 100%;
+}
+.main-content {
+  flex: 1;
+  padding: 10px;
+  width: 100%;
+}
+.dashboard {
+    display: flex;
+}
+    .sidebar {
+        transform: translateX(-300px);
+    }
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    .user-info {
+        text-align: right;
+        width: 100%;
+        text-decoration: none;
+        text-align: right;
+        margin-bottom: -60px;
+        width: 100%;
+        margin-left: -25px;
+    }
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+.fa-user-shield{
+  display: none;
+}
+
+.icon-container i {
+  color: #fafafa;
+  margin-left: 0px;
+}
+.icon-container {
+  margin-left: -10px;
+  margin-top: 20px;
+  margin-right: 0px;
+}
+.sidebar h2 {
+  text-align: center;
+  text-decoration: none;
+  padding-bottom: 10px;
+  color: #fff;
+}
+.side_panel p {
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+}
+.sidebar p {
+  margin-top: -20px;
+  margin-left: 65px;
+  text-decoration: none;
+  color: #fff;
+}
+.sidebar {
+  width: 250px;
+  height: 100%;
+  position: absolute;
+  background-color: #2b2a2a;
+  top: 135px;
+  z-index: 100;
+  transition: left 0.3s ease;
+}
+
+}

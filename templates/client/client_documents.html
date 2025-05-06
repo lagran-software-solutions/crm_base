@@ -1,0 +1,48 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive4 %}dashboardactive {% endblock %}
+{% block content %}
+  <!-- Main Content -->
+  <div id="main-content" class="p-4" style="background-color: rgb(255, 255, 255)">
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+
+            <table class="table uploadmedia-table">
+                <thead>
+                    <tr>
+                        <th>SNO</th>
+                        <th>File Name</th>
+                        <th>Download</th>
+                        <th>Size</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for document in documents %}
+                        {% if document.file %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ document.name }}</td>
+                                <td>
+                                    <a href="{{ document.file.url }}">Download</a>
+                                </td>
+                                <td>
+                                    {{ document.file.size|filesizeformat }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive4 %}dashboardactive{% endblock %}
+{% block content %}
+  <!-- Main Content -->
+  <div id="main-content" class="p-4" style="background-color: rgb(255, 255, 255)">
+    <div class="container-fluid">
+      <h4 class="mb-3">Upload Media</h4>
+      <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'service_file' folder_id folder_slug %}">
+        {% csrf_token %}
+      <div class="row align-items-center mb-3">
+        <div class="col-md-4 mb-2 mb-md-0">
+          <div class="form-group mb-0">
+            <input class="form-control" type="file" name="file" />
+        
+          </div>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">
+            Upload file
+          </button>
+        </div>
+      </div>
+      </form>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table uploadmedia-table">
+              <thead>
+                <tr>
+                  <th>SNO</th>
+                  <th>File Name</th>
+                  <th>Download</th>
+                  <th>Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for obj in files %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td>{{obj.file}}</td>
+                  <td><a href="{{obj.file.url}}">Download</a></td>
+                  <td>{{ obj.file_size|filesizeformat }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock %}

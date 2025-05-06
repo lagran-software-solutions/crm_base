@@ -1,0 +1,269 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive6 %}dashboardactive {% endblock %}
+
+
+{% block content %}
+
+<div class="container my-4 client-container" style="padding: 100px;">
+    <div class="row g-4">
+
+        <!-- New Company Cart Creation Form -->
+        <div class="col-md-12">
+            <div class="card p-4">
+                {% if is_update %}
+                <h5 class="card-title text-center">Update Client</h5>
+                {% else %}
+                <h5 class="card-title text-center">Create New Client</h5>
+                {% endif %}
+                <form id="newCompanyCartForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+            
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        
+                        <!-- Check if the current field is a password field -->
+                        {% if field.name == "password" or field.name == "confirm_password" %}
+                            <div class="input-group">
+                                {{ field }}
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-toggle="{{ field.id_for_label }}">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        
+                        <!-- Display field errors -->
+                        {% if field.errors %}
+                            <div class="alert alert-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-100 mt-3">
+                        <i class="fas fa-plus"></i>   {% if is_update %} Update Client{% else %}Add Client{% endif %} 
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("newCompanyCartForm");
+        const fields = form.querySelectorAll("input, select, textarea");
+    
+        fields.forEach((field) => {
+            // Add real-time validation on 'input' and 'blur' events
+            field.addEventListener("input", () => validateField(field));
+            field.addEventListener("blur", () => validateField(field));
+        });
+    
+        form.addEventListener("submit", (e) => {
+            let formIsValid = true;
+    
+            fields.forEach((field) => {
+                if (!validateField(field)) {
+                    formIsValid = false;
+                }
+            });
+    
+            if (!formIsValid) {
+                e.preventDefault();
+            }
+        });
+    
+        function validateField(field) {
+            const errorMessage = field.parentNode.querySelector(".error-message") || createErrorMessage(field);
+            let valid = true;
+    
+            // Validation rules based on field name
+            switch (field.name) {
+                case "email":
+                    valid = validateEmail(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid email address.";
+                    break;
+                case "mobile":
+                    valid = validateMobile(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid mobile number (10 digits).";
+                    break;
+                case "pan":
+                if (field.value) { 
+                    valid = validatePAN(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid PAN number (10 alphanumeric characters).";
+                } else {
+                    valid = true; 
+                    errorMessage.textContent = ""; 
+                }
+                break;
+                case "password":
+                    if (field.value) { 
+                        valid = field.value.length >= 8;
+                        errorMessage.textContent = valid ? "" : "Password must be at least 8 characters.";
+                    } else {
+                        valid = true; 
+                    }
+                    break;
+                case "confirm_password":
+                    const password = form.querySelector("input[name='password']").value;
+                    if (password) { 
+                        valid = field.value === password;
+                        errorMessage.textContent = valid ? "" : "Passwords do not match.";
+                    } else {
+                        valid = true;
+                    }
+                    break;
+            }
+    
+            errorMessage.style.display = valid ? "none" : "block";
+            return valid;
+        }
+    
+        // Helper functions for specific validations
+        function validateEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(email);
+        }
+    
+        function validateMobile(mobile) {
+            const mobilePattern = /^\d{10}$/;
+            return mobilePattern.test(mobile);
+        }
+    
+        function validatePAN(pan) {
+            const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+            return panPattern.test(pan);
+        }
+    
+        // Helper to create an error message container
+        function createErrorMessage(field) {
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "error-message text-danger";
+            errorMessage.style.display = "none";
+            field.parentNode.appendChild(errorMessage);
+            return errorMessage;
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const anchorTags = document.querySelectorAll('.form-group a');
+        anchorTags.forEach(function(anchor) {
+            anchor.setAttribute('target', '_blank');
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => { 
+        const registrationTypeSelect = document.querySelector("#id_registration"); // Dropdown field
+    
+        const llpinField = document.querySelector("#id_llpin");
+        const llpinLabel = document.querySelector("label[for='id_llpin']");
+        
+        const cinField = document.querySelector("#id_cin");
+        const cinLabel = document.querySelector("label[for='id_cin']");
+        
+        const firmNoField = document.querySelector("#id_firm_no");
+        const firmNoLabel = document.querySelector("label[for='id_firm_no']");
+    
+        // Hide all fields and labels initially
+        llpinField.style.display = "none";
+        llpinLabel.style.display = "none";
+        
+        cinField.style.display = "none";
+        cinLabel.style.display = "none";
+        
+        firmNoField.style.display = "none";
+        firmNoLabel.style.display = "none";
+    
+        // Check if any field already has a value and update dropdown and visibility accordingly
+        if (llpinField.value) {
+            registrationTypeSelect.value = "llpin"; // Select the corresponding dropdown option
+            llpinField.style.display = "block";
+            llpinLabel.style.display = "block";
+        } else if (cinField.value) {
+            registrationTypeSelect.value = "cin"; // Select the corresponding dropdown option
+            cinField.style.display = "block";
+            cinLabel.style.display = "block";
+        } else if (firmNoField.value) {
+            registrationTypeSelect.value = "firm_no"; // Select the corresponding dropdown option
+            firmNoField.style.display = "block";
+            firmNoLabel.style.display = "block";
+        } else {
+            // Show the relevant field and label based on the default dropdown value
+            const selectedValue = registrationTypeSelect.value;
+            if (selectedValue === "llpin") {
+                llpinField.style.display = "block";
+                llpinLabel.style.display = "block";
+            } else if (selectedValue === "cin") {
+                cinField.style.display = "block";
+                cinLabel.style.display = "block";
+            } else if (selectedValue === "firm_no") {
+                firmNoField.style.display = "block";
+                firmNoLabel.style.display = "block";
+            }
+        }
+    
+        // Add event listener for dropdown changes
+        registrationTypeSelect.addEventListener("change", () => {
+            const selectedValue = registrationTypeSelect.value;
+    
+            // Hide all fields and labels
+            llpinField.style.display = "none";
+            llpinLabel.style.display = "none";
+            
+            cinField.style.display = "none";
+            cinLabel.style.display = "none";
+            
+            firmNoField.style.display = "none";
+            firmNoLabel.style.display = "none";
+    
+            // Show the relevant field and label based on the dropdown selection
+            if (selectedValue === "llpin") {
+                llpinField.style.display = "block";
+                llpinLabel.style.display = "block";
+            } else if (selectedValue === "cin") {
+                cinField.style.display = "block";
+                cinLabel.style.display = "block";
+            } else if (selectedValue === "firm_no") {
+                firmNoField.style.display = "block";
+                firmNoLabel.style.display = "block";
+            }
+        });
+    });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.toggle-password').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const inputId = this.getAttribute('data-toggle');
+                const inputField = document.getElementById(inputId);
+    
+                if (inputField.type === 'password') {
+                    inputField.type = 'text';
+                    this.querySelector('i').classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    inputField.type = 'password';
+                    this.querySelector('i').classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        });
+    });
+    
+    
+</script>
+
+{% endblock %}

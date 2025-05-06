@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'img/BFS_logo.png' %}" type="image/png">
+    <title></title>
+</head>
+<body>
+    <h3>sign up</h3>
+
+    <form action="/signup" method="post">
+        {% csrf_token %}
+        <label for="">Username</label>
+        <input type="text" name="username" id="username" placeholder="Create a username ">
+        <br>
+        <label for="">firstname</label>
+        <input type="text" name="fname" id="fname" placeholder="Create a first ">
+        <br>
+        <label for="">lastname</label>
+        <input type="text" name="lname" id="lname" placeholder="Create a last ">
+        <br>
+        <label for="">Email</label>
+        <input type="email" name="email" id="email" placeholder="enter a email ">
+        <br>
+        <label for="">password</label>
+        <input type="password" name="pass1" id="pass1" placeholder="Create a password ">
+        <br>
+        <label for="">Confirm Your password</label>
+        <input type="password" name="pass2" id="pass2" placeholder="Confirm Your password ">
+        <br>
+        <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>

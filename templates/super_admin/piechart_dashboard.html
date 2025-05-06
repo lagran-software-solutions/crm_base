@@ -1,0 +1,243 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block navactive1 %}dashboardactive {% endblock %}
+{% block nav %}
+
+<style>
+  .position-relative {
+    position: relative;
+  }
+
+  .placeholder-text {
+    position: absolute;
+    left: 10px;
+    top: 40%;
+    /* Center vertically */
+    transform: translateY(-50%);
+    /* Adjust for centering */
+    pointer-events: none;
+    color: #888;
+    transition: 0.2s ease all;
+    /* Smooth transition */
+    text-align: center;
+    /* Center the text horizontally */
+    width: calc(100% - 20px);
+    /* Full width minus padding for centering */
+  }
+
+  /* Hide placeholder when input is focused or has value */
+  input[type="date"]:focus+.placeholder-text,
+  input[type="date"]:valid+.placeholder-text {
+    display: none;
+  }
+
+  /* Hide the default date input text */
+  .date-input::-webkit-inner-spin-button,
+  .date-input::-webkit-calendar-picker-indicator {
+    display: none;
+    /* Hide the calendar icon */
+    -webkit-appearance: none;
+    /* Remove default styling */
+  }
+
+  /* Hide the date format */
+  .date-input {
+    color: transparent;
+    /* Hide the default date format */
+  }
+
+  .date-input:focus {
+    color: black;
+    /* Show text color when focused */
+  }
+
+  /* Placeholder styles for browsers that support it */
+  .date-input::placeholder {
+    color: #888;
+    /* Light gray color for placeholder text */
+  }
+</style>
+<!-- Main Content -->
+<div id="main-content" class="p-4">
+  <!-- Button Container -->
+  <div class="button-container">
+    <form method="post" action="{% url 'dashboard' user_id user_type status_type %}" style="width: 100%;" id="filterForm">
+      <ul class="nav nav-tabs">
+        {% csrf_token %}
+
+        <div class="me-2">
+          {{form.search_term}}
+        </div>
+
+        <div class="me-2">
+          <div class="input-group">
+            <input name="start_date" type="text" id="start_date" class="form-control" placeholder="Start Date"
+              onfocus="(this.type='date')" onblur="(this.type='text')"
+              value="{% if form.start_date.value %}{{ form.start_date.value }}{% endif %}" / style="width: 120px;">
+          </div>
+        </div>
+        <div class="me-2">
+          <div class="input-group">
+            <input name="end_date" type="text" id="end_date" class="form-control" placeholder="End Date"
+              onfocus="(this.type='date')" onblur="(this.type='text')"
+              value="{% if form.end_date.value %}{{ form.end_date.value }}{% endif %}" / style="width: 120px;">
+          </div>
+        </div>
+        
+        <div class="dropdown">
+          <!-- Button that displays the active status -->
+          <button class="btn btn-outline-primary dropdown-toggle mb-2 me-4" type="button" id="requestDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.path|last_segment == 'all_request' %}
+              Total Requests-{{all_request_count}}
+            {% elif request.path|last_segment == 'in_progress' %}
+              Pending Requests-{{in_progress_count}}
+            {% elif request.path|last_segment == 'completed' %}
+            Completed-{{completed_count}}
+            {% elif request.path|last_segment == 'empty' %}
+            Empty-{{empty_count}}
+            {% elif request.path|last_segment == 'cancelled' %}
+            Cancelled-{{cancelled_count}}
+            {% else %}
+              Request Status
+            {% endif %}
+          </button>
+          
+          <!-- Dropdown menu items -->
+          <ul class="dropdown-menu" aria-labelledby="requestDropdown">
+            <li>
+              <a class="dropdown-item {% if request.path|last_segment == 'all_request' %}active{% endif %}" 
+                 href="{% url 'dashboard' user_id=user_id user_type=user_type status_type='all_request' %}">
+                Total Requests-{{all_request_count}}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if request.path|last_segment == 'in_progress' %}active{% endif %}" 
+                 href="{% url 'dashboard' user_id=user_id user_type=user_type status_type='in_progress' %}">
+                 Pending Requests-{{in_progress_count}}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if request.path|last_segment == 'completed' %}active{% endif %}" 
+                 href="{% url 'dashboard' user_id=user_id user_type=user_type status_type='completed' %}">
+                 Completed-{{completed_count}}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if request.path|last_segment == 'empty' %}active{% endif %}" 
+                 href="{% url 'dashboard' user_id=user_id user_type=user_type status_type='empty' %}">
+                 Empty-{{empty_count}}
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item {% if request.path|last_segment == 'cancelled' %}active{% endif %}" 
+                 href="{% url 'dashboard' user_id=user_id user_type=user_type status_type='cancelled' %}">
+                 Cancelled-{{cancelled_count}}
+              </a>
+            </li>
+      
+          </ul>
+        </div>
+
+        {% if not request.user.is_superuser %}
+        <a href="{% url 'client_dashboard' %}"
+          class="btn btn-outline-primary {% if request.path == 'client/service-dashboard' %}active{% endif %} mb-2 me-4">Task</a>
+          <a href="{% url 'dashboard' user_id=request.user.id user_type='all' status_type='my_works' %}"
+          class="btn btn-outline-primary {% if request.path|last_segment == 'my_works' %}active{% endif %} mb-2 me-4">My
+          Task</a>
+        {% endif %}
+
+        <a href="{% url 'client_complaints' %}" class="btn btn-outline-primary mb-2 me-4">Complaints</a>
+
+        <a href="{% url 'dashboard' user_id=user_id user_type=user_type status_type='piechart_dashboard' %}" class="btn btn-outline-primary {% if request.path|last_segment == 'piechart_dashboard' %}active{% endif %}  mb-2 me-4">
+          <i class="fas fa-chart-pie me-1"></i> Piechart View
+        </a>
+
+      </ul>
+    </form>
+  </div>
+
+
+
+  <div style="text-align: center; margin-top: 20px;">
+    <h2>Request Chart</h2>
+    <canvas id="client" style="width:100%; max-width:600px; margin: 0 auto;"></canvas>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script>
+    // Data for the chart
+    var legendLabels = ["Pending Requests", "Completed Requests", "Completed Task", "Empty"];
+    var Data = [{{in_progress_count}}, {{completed_count}}, {{cancelled_count}}, {{empty_count}}];
+    //var Data = [1, 2, 3, 4];
+    var barColors = ["#b91d47", "#00aba9", "#2b5797", "#e8c3b9"];
+  
+    // Function to check if all values in an array are zero
+    function isAllZero(data) {
+      return data.every(value => value === 0);
+    }
+  
+    // Display "No data found" or the chart based on data for client
+    if (isAllZero(Data)) {
+      document.getElementById("client").outerHTML = "<p>No data found for client</p>";
+    } else {
+      new Chart(document.getElementById("client"), {
+        type: "pie",
+        data: {
+          labels: legendLabels,
+          datasets: [{
+            backgroundColor: barColors,
+            data: Data
+          }]
+        },
+        options: {
+          legend: { display: true }
+        }
+      });
+    }
+  </script>
+  
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const year = today.getFullYear();
+      const maxDate = `${year}-${month}-${day}`;
+
+      // Set the max attribute for all date input fields
+      document.querySelectorAll('input[type="date"]').forEach(function(dateInput) {
+          dateInput.setAttribute("max", maxDate);
+      });
+  });
+</script>
+<script>
+  const filterForm = document.getElementById('filterForm');
+  document.querySelectorAll('#filterForm input').forEach(input => {
+    input.addEventListener('change', () => {
+      filterForm.submit();
+    });
+  });
+</script>
+
+<script>
+  const placeholderText = "Enter client name, Request Service, or Assigned To Employee";
+  const inputField = document.getElementById("id_admin_search_term");
+
+  function slidePlaceholder(text) {
+    let displayText = text;
+    let ticker = setInterval(() => {
+      displayText = displayText.substring(1) + displayText[0]; // Rotate characters leftward
+      inputField.setAttribute("placeholder", displayText);
+    }, 200); // Adjust speed here if needed
+
+    inputField.addEventListener("focus", () => clearInterval(ticker)); // Stop when input is focused
+    inputField.addEventListener("blur", () => slidePlaceholder(placeholderText)); // Resume when focus is lost
+  }
+
+  // Start the sliding effect on page load
+  slidePlaceholder(placeholderText);
+</script>
+{% endblock %}

@@ -1,0 +1,562 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive12 %}dashboardactive{% endblock %}
+
+{% block content %}
+<style>
+    .invoice-form-container {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        margin-bottom: 20px;
+    }
+
+    .form-section-title {
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #4A5568;
+        border-bottom: 2px solid #E2E8F0;
+        padding-bottom: 5px;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #2D3748;
+    }
+
+    input::placeholder {
+        color: #A0AEC0;
+    }
+
+    .btn-success {
+        background-color: #48BB78;
+        border-color: #38A169;
+    }
+
+    .btn-success:hover {
+        background-color: #38A169;
+        border-color: #2F855A;
+    }
+
+    .btn-primary {
+        background-color: #4299E1;
+        border-color: #3182CE;
+    }
+
+    .btn-primary:hover {
+        background-color: #3182CE;
+        border-color: #2B6CB0;
+    }
+
+    table thead th {
+        background-color: #EDF2F7;
+        color: #2D3748;
+        font-weight: 600;
+    }
+
+    .total-section {
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #2B6CB0;
+        background-color: #F7FAFC;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+    }
+    .preview-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .img-thumbnail {
+        width: 320px;
+        max-height: 90px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    .error-message {
+        font-size: 0.875em;
+        color: #dc3545;
+    }
+
+    .is-invalid {
+        border-color: #dc3545;
+        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    }
+
+    .mt-1 {
+        margin-top: 0.25rem;
+    }
+
+ 
+</style>
+
+<div id="main-content" class="p-4">
+    <div class="container">
+        <div class="invoice-form-container">
+            <!-- Header with Logo -->
+            <form id="invoice-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary">Create Invoice</h2>
+                <div class="logo-container">
+                    <div class="mb-3">
+            
+                        <!-- Conditional for Preview -->
+                        <div class="preview-container mb-2">
+                            {% if invoice and invoice.logo %}
+                                <img id="logoPreview" 
+                                     src="{{ invoice.logo.url }}" 
+                                     alt="Logo Preview" 
+                                     class="img-thumbnail"/>
+                            {% else %}
+                                <img id="logoPreview" 
+                                     src="{% static "img/BFS_logo.png" %}" 
+                                     width="150px" height="50px"
+                                     alt="Default Logo" 
+                                     class="img-thumbnail"/>
+                            {% endif %}
+                        </div>
+                     
+                        {{ form.logo }}
+                        {{form.invoice.error}}
+                    </div>
+                
+                </div>
+            </div>
+                <!-- Invoice Information -->
+                <div class="row">
+                    <!-- From Section -->
+                    <div class="col-md-6">
+                        <h4 class="form-section-title">From</h4>
+                        <div class="mb-3">
+                            <label for="fromName" class="form-label">Name</label>
+                            {{form.from_name}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="fromBusiness" class="form-label">Business Name</label>
+                            {{form.from_business}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="fromGST" class="form-label">GST Number</label>
+                            {{form.from_gst}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="fromAddress" class="form-label">Address</label>
+                            {{form.from_address}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="fromPan" class="form-label">PAN</label>
+                            {{form.from_pan}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="fromEmail" class="form-label">Email</label>
+                            {{form.from_email}}
+                        </div>
+                    </div>
+
+                    <!-- To Section -->
+                    <div class="col-md-6">
+                        <h4 class="form-section-title">Bill To</h4>
+                        <div class="mb-3">
+                            <label for="toName" class="form-label">Name</label>
+                            {{form.to_name}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="toBusiness" class="form-label">Business Name</label>
+                            {{form.to_business}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="toGST" class="form-label">GST Number</label>
+                            {{form.to_gst}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="toAddress" class="form-label">Address</label>
+                            {{form.to_address}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="toPan" class="form-label">PAN</label>
+                            {{form.to_pan}}
+                        </div>
+                        <div class="mb-3">
+                            <label for="toEmail" class="form-label">Email</label>
+                            {{form.to_email}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoice Details -->
+                <h4 class="form-section-title">Invoice Details</h4>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="invoiceNumber" class="form-label">Invoice Number</label>
+                        {{form.invoice_number}}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="invoiceDate" class="form-label">Invoice Date</label>
+                        {{form.invoice_date}}
+                    </div>
+                </div>
+
+                <!-- Items Section -->
+                <h4 class="form-section-title" >Invoice Items</h4>
+                <div class="Invoice-Item-table">
+
+                <table class="table table-bordered table-hover ">
+
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Rate (₹)</th>
+                                <th>GST (%)</th>
+                                <th>Other Tax (%)</th>
+                                <th>Total Tax (₹)</th>
+                                <th>Amount (₹)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-body"></tbody>
+                    </table>
+                </div>
+
+                    <button type="button" id="add-item" class="btn btn-primary">Add Item</button>
+
+                <!-- Summary -->
+                <h4 class="form-section-title">Summary</h4>
+                <div class="row">
+                    <div class="col-md-6 offset-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td class="text-end"><strong>Sub-total (₹):</strong></td>
+                                <td class="text-end">
+                                    <input type="text" id="subTotal" class="form-control text-end" value="0" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-end"><strong>Total Tax (₹):</strong></td>
+                                <td class="text-end">
+                                    <input type="text" id="totalTax" class="form-control text-end" value="0" readonly>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-end"><strong>Total Amount (₹):</strong></td>
+                                <td class="text-end">
+                                    <input type="text" id="totalAmount" class="form-control text-end" value="0"
+                                        readonly>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Bank Details -->
+                <h4 class="form-section-title">Bank Details</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="bankName" class="form-label">Bank Name</label>
+                        {{form.bank_name}}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="accountNumber" class="form-label">Account Number</label>
+                        {{form.account_number}}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="accountNumber" class="form-label">MIM ID</label>
+                        {{form.mim_id}}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="ifscCode" class="form-label">IFSC Code</label>
+                        {{form.ifsc_code}}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="branchName" class="form-label">Branch Name</label>
+                        {{form.branch_name}}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="branchName" class="form-label">Swift id</label>
+                        {{form.swift_id}}
+                    </div>
+                </div>
+
+                <!-- Note Section -->
+                <h4 class="form-section-title">Additional Note</h4>
+                <div class="mb-3">
+                    <label for="additionalNote" class="form-label">Note</label>
+                    {{form.additional_note}}
+                </div>
+
+                <!-- Submit -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success">Create Invoice</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{{form.errors}}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const itemsBody = document.getElementById("items-body");
+        const addItemBtn = document.getElementById("add-item");
+        const subTotalField = document.getElementById("subTotal");
+        const totalTaxField = document.getElementById("totalTax");
+        const totalAmountField = document.getElementById("totalAmount");
+
+        const existingItems = {{ items|default:"[]"|safe }};
+
+        if (existingItems.length > 0) {
+            existingItems.forEach(item => addRow(item));
+        } else {
+            addRow(); 
+        }
+
+        // Add a new row to the table
+        function addRow(item = {}) {
+            const newRow = document.createElement("tr");
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control description" value="${item.description || ''}" placeholder="Item description"></td>
+                <td><input type="number" class="form-control rate" value="${item.rate || 0}" step="0.01"></td>
+                <td><input type="number" class="form-control gst" value="${item.gst || 0}" step="0.01"></td>
+                <td><input type="number" class="form-control other-tax" value="${item.other_tax || 0}" step="0.01"></td>
+                <td><input type="text" class="form-control total-tax" value="${item.total_tax || 0}" readonly></td>
+                <td><input type="text" class="form-control amount" value="${item.amount || 0}" readonly></td>
+                <td><button type="button" class="btn btn-danger remove-item">Delete</button></td>
+            `;
+            itemsBody.appendChild(newRow);
+
+            // Add event listeners for input fields
+            const inputs = newRow.querySelectorAll(".rate, .gst, .other-tax");
+            inputs.forEach(input => input.addEventListener("input", () => {
+                calculateRowValues(newRow);
+                calculateTotals();
+            }));
+
+            // Add event listener for remove button
+            newRow.querySelector(".remove-item").addEventListener("click", () => {
+                newRow.remove();
+                calculateTotals();
+            });
+
+            // Calculate values for the row on creation
+            calculateRowValues(newRow);
+            calculateTotals();
+        }
+
+        // Calculate row values (total tax and amount)
+        function calculateRowValues(row) {
+            const rate = parseFloat(row.querySelector(".rate").value) || 0;
+            const gst = parseFloat(row.querySelector(".gst").value) || 0;
+            const otherTax = parseFloat(row.querySelector(".other-tax").value) || 0;
+
+            const totalTax = (rate * gst) / 100 + (rate * otherTax) / 100;
+            const amount = rate + totalTax;
+
+            row.querySelector(".total-tax").value = totalTax.toFixed(2);
+            row.querySelector(".amount").value = amount.toFixed(2);
+        }
+
+        // Calculate totals (subtotal, total tax, total amount)
+        function calculateTotals() {
+            let subTotal = 0;
+            let totalTax = 0;
+            let totalAmount = 0;
+
+            itemsBody.querySelectorAll("tr").forEach(row => {
+                const rate = parseFloat(row.querySelector(".rate").value) || 0;
+                const totalTaxPerRow = parseFloat(row.querySelector(".total-tax").value) || 0;
+                const amount = parseFloat(row.querySelector(".amount").value) || 0;
+
+                subTotal += rate;
+                totalTax += totalTaxPerRow;
+                totalAmount += amount;
+            });
+
+            subTotalField.value = subTotal.toFixed(2);
+            totalTaxField.value = totalTax.toFixed(2);
+            totalAmountField.value = totalAmount.toFixed(2);
+        }
+
+        // Add a new row when the "Add Item" button is clicked
+        addItemBtn.addEventListener("click", () => addRow());
+
+        document.getElementById("invoice-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const items = [];
+
+            itemsBody.querySelectorAll("tr").forEach(row => {
+                const description = row.querySelector(".description").value;
+                const rate = parseFloat(row.querySelector(".rate").value) || 0;
+                const gst = parseFloat(row.querySelector(".gst").value) || 0;
+                const otherTax = parseFloat(row.querySelector(".other-tax").value) || 0;
+                const totalTax = parseFloat(row.querySelector(".total-tax").value) || 0;
+                const amount = parseFloat(row.querySelector(".amount").value) || 0;
+
+                if (description.trim()) {
+                    items.push({ description, rate, gst, other_tax: otherTax, total_tax: totalTax, amount });
+                }
+            });
+
+
+            const hiddenInput = document.createElement("input");
+            hiddenInput.type = "hidden";
+            hiddenInput.name = "items";
+            hiddenInput.value = JSON.stringify(items);
+            this.appendChild(hiddenInput);
+
+            // Submit the form
+            this.submit();
+        });
+    });
+</script>
+
+<script>
+    document.getElementById('id_logo').addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('logoPreview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+</script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("invoice-form");
+        const fields = form.querySelectorAll("input, textarea, select");
+
+        // Attach validation events to all fields
+        fields.forEach((field) => {
+            field.addEventListener("input", () => validateField(field));
+            field.addEventListener("blur", () => validateField(field));
+        });
+
+        // Validate all fields on form submission
+        form.addEventListener("submit", (e) => {
+            let formIsValid = true;
+
+            fields.forEach((field) => {
+                if (!validateField(field)) {
+                    formIsValid = false;
+                }
+            });
+
+            if (!formIsValid) {
+                e.preventDefault();
+            }
+        });
+
+        // Validation rules for individual fields
+        function validateField(field) {
+            const errorMessage = field.parentNode.querySelector(".error-message") || createErrorMessage(field);
+            let valid = true;
+
+            switch (field.name) {
+                case "logo":
+                    valid = field.files.length > 0;
+                    errorMessage.textContent = valid ? "" : "Please upload a logo.";
+                    break;
+
+                case "from_name":
+                case "to_name":
+                    valid = field.value.trim() !== "";
+                    errorMessage.textContent = valid ? "" : "Name is required.";
+                    break;
+
+                case "from_business":
+                case "to_business":
+                    valid = field.value.trim() !== "";
+                    errorMessage.textContent = valid ? "" : "Business name is required.";
+                    break;
+
+                case "from_gst":
+                case "to_gst":
+                    valid = /^[0-9]{15}$/.test(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid 15-digit GST number.";
+                    break;
+
+                case "from_email":
+                case "to_email":
+                    valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid email address.";
+                    break;
+
+                case "from_pan":
+                case "to_pan":
+                    valid = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid PAN number (e.g., ABCDE1234F).";
+                    break;
+
+                case "invoice_number":
+                    valid = field.value.trim() !== "";
+                    errorMessage.textContent = valid ? "" : "Invoice number is required.";
+                    break;
+
+                case "invoice_date":
+                    valid = validateDate(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid date.";
+                    break;
+
+                case "bank_name":
+                    valid = field.value.trim() !== "";
+                    errorMessage.textContent = valid ? "" : "Bank name is required.";
+                    break;
+
+                case "account_number":
+                    valid = /^[0-9]{9,18}$/.test(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid account number.";
+                    break;
+
+                case "ifsc_code":
+                    valid = /^[A-Z]{4}0[A-Z0-9]{6}$/.test(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid IFSC code.";
+                    break;
+
+                case "mim_id":
+                case "swift_id":
+                    valid = field.value.trim() !== "";
+                    errorMessage.textContent = valid ? "" : "This field is required.";
+                    break;
+
+                case "additional_note":
+                    valid = field.value.length <= 500;
+                    errorMessage.textContent = valid ? "" : "Additional note must be 500 characters or fewer.";
+                    break;
+
+                default:
+                    valid = field.value.trim() !== "";
+                    errorMessage.textContent = valid ? "" : "This field is required.";
+            }
+
+            errorMessage.style.display = valid ? "none" : "block";
+            field.classList.toggle("is-invalid", !valid);
+            return valid;
+        }
+
+        // Date validation
+        function validateDate(dateString) {
+            const date = new Date(dateString);
+            return !isNaN(date.getTime());
+        }
+
+        // Create error message dynamically
+        function createErrorMessage(field) {
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "error-message text-danger";
+            field.parentNode.appendChild(errorMessage);
+            return errorMessage;
+        }
+    });
+</script>
+{% endblock %}

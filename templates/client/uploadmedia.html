@@ -1,0 +1,92 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive4 %}dashboardactive {% endblock %}
+{% block content %}
+  <!-- Main Content -->
+  <div id="main-content" class="p-4" style="background-color: rgb(255, 255, 255)">
+    <div class="container-fluid">
+      <h4 class="mb-3">Upload Media</h4>
+      <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'file' folder_id slug %}">
+        {% csrf_token %}
+      <div class="row align-items-center mb-3">
+        <div class="col-md-4 mb-2 mb-md-0">
+          <div class="form-group mb-0">
+            <input class="form-control" type="file" name="file" multiple required />
+            <input type="hidden" name="folder" value="{{ slug }}">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">
+            Upload file
+          </button>
+        </div>
+      </div>
+      </form>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table uploadmedia-table">
+              <thead>
+                <tr>
+                  <th>SNO</th>
+                  <th>File Name</th>
+                  <th>Download</th>
+                  <th>Size</th>
+                  <th>Delete</th>
+                  {% if request.user.is_admin %}
+                  <th>Private</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for obj in files %}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td>{{obj.file}}</td>
+                
+                  {% if obj.is_private and not request.user.is_admin %}
+                  <td>
+                  <button style="background: none; border: none;"><span class="badge badge-light-cancelled req-status">Private</span></button>
+                  </td>
+                  {% else %}
+                  <td><a href="{{obj.file.url}}">Download</a></td>
+                  {% endif %}
+                  <td>{{ obj.file_size|filesizeformat }}</td>
+                  <form method="post" action="{% url 'file' folder_id slug %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="file_id" value="{{ obj.id }}">
+                
+                    {% if request.user.is_admin or not obj.admin %}
+              
+                    <td>
+                      <button style="background: none; border: none;" type="submit" name="delete_file" onclick="return confirm('Are you sure you want to delete this file?');"><span class="badge badge-light-cancelled req-status">Delete</span></button>
+                    </td>
+                    {% endif %}
+                    {% if request.user.is_admin %}
+                    <td>
+                      <button style="background: none; border: none;" type="submit" name="toggle_private">
+                        <span class="badge badge-light-{% if obj.is_private %}cancelled {% else %}success {% endif %}">
+                          {% if obj.is_private %}Private {% else %}Public {% endif %}
+                        </span>
+                      </button>
+                    </td>
+                    {% endif %}
+                </form>
+                
+                </form>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+{% endblock %}
+ 

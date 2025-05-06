@@ -1,0 +1,323 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive12 %}dashboardactive{% endblock %}
+
+{% block nav %}
+<div id="main-content" class="p-4">
+{% endblock %}
+
+{% block content %}
+    <div class="invoice-container">
+        <form method="post" enctype="multipart/form-data" id="invoice-form">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary">Create Invoice</h2>
+                <div class="logo-container">
+                    <div class="mb-3">
+                        <div class="preview-container mb-2">
+                            {% if invoice and invoice.logo %}
+                                <img id="logoPreview" 
+                                     src="{{ invoice.logo.url }}" 
+                                     alt="Logo Preview" 
+                                     class="img-thumbnail"/>
+                            {% else %}
+                                <img id="logoPreview" 
+                                     src="{% static "img/BFS_logo.png" %}" 
+                                     alt="Default Logo" 
+                                     width="150px" height="50px"
+                                     class="img-thumbnail"/>
+                            {% endif %}
+                        </div>
+                        {{ form.logo }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-section">
+                <div class="company-info">
+                    <p><strong>Company Name:</strong> {{ form.company_name }}</p>
+                    <p><strong>Address:</strong> {{ form.company_address }}</p>
+                    <p><strong>Contact:</strong> {{ form.company_contact }}</p>
+                    <p><strong>Invoice Date:</strong> {{ form.invoice_date }}</p>
+                    <p><strong>Invoice Number:</strong> {{ form.invoice_number }}</p>
+                </div>
+            </div>
+
+            <div class="invoice-title">INVOICE</div>
+
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td><strong>Range:</strong></td>
+                        <td>{{ form.range_address }}</td>
+                        <td><strong>Division:</strong></td>
+                        <td>{{ form.division }}</td>
+                        <td><strong>State:</strong></td>
+                        <td>{{ form.state }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Commissioner:</strong></td>
+                        <td>{{ form.commissioner }}</td>
+                        <td><strong>Reverse Charge (Y/N):</strong></td>
+                        <td>{{ form.reverse_charge }}</td>
+                        <td><strong>State Code :</strong></td>
+                        <td>{{ form.state_code }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Receiver Details</th>
+                        <th>Information</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Name:</strong></td>
+                        <td>{{ form.receiver_name }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Address:</strong></td>
+                        <td>{{ form.receiver_address }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Place of Supply:</strong></td>
+                        <td>{{ form.place_of_supply }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>GSTN:</strong></td>
+                        <td>{{ form.gstn }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Amount (in Rs.)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="items-body">
+                    {% for item in items %}
+                    <tr>
+                        <td><input type="text" class="form-control description" value="{{ item.description }}" placeholder="Item description"></td>
+                        <td><input type="number" class="form-control amount" value="{{ item.amount }}" step="0.01"></td>
+                        <td><button type="button" class="btn btn-danger remove-item">Delete</button></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <button type="button" id="add-item" class="btn btn-primary">Add Item</button>
+
+            <table class="table table-bordered summary-table">
+                <tbody>
+                    <tr>
+                        <td><strong>Total Amount Before Tax:</strong></td>
+                        <td>{{ form.total_amount_before_task }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>CGST:</strong></td>
+                        <td>{{ form.cgst }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SGST:</strong></td>
+                        <td>{{ form.sgst }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>IGST:</strong></td>
+                        <td>{{ form.igst }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Tax Amount:</strong></td>
+                        <td>{{ form.tax_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total Amount After Tax:</strong></td>
+                        <td>{{ form.total_amount_after_task }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <label for="id_total_in_words" class="form-label">Total Amount in Words</label>
+                {{ form.total_in_words }}
+            </div>
+
+            <div class="bank-terms">
+                <div class="bank-details">
+                    <p><strong>Bank Details:</strong></p>
+                    <p><strong>Account No:</strong> {{ form.bank_account }}</p>
+                    <p><strong>IFSC:</strong> {{ form.ifsc }}</p>
+                    <p><strong>Branch:</strong> {{ form.branch }}</p>
+                    <p><strong>Upload QR code:</strong> {{ form.qr_code }}</p>
+                </div>
+                <div class="terms-conditions">
+                    <p><strong>Terms & Conditions:</strong></p>
+                    <p>PAN: {{ form.pan }}</p>
+                    <p>TDS Rate: {{ form.tds_rate }}</p>
+                    <p>Payment: {{ form.payment }}</p>
+                    <p>PhonePe/GPay: {{ form.gpay_phone }}</p>
+                </div>
+            </div>
+            <div>
+                <label for="id_footer_content" class="form-label">Footer Content</label>
+                {{ form.footer_content }}
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-success" id="submit-button">Submit</button>
+            </div>
+            
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const itemsBody = document.getElementById("items-body");
+            const addItemBtn = document.getElementById("add-item");
+            const totalBeforeTaxField = document.getElementById("id_total_amount_before_task");
+            const cgstField = document.getElementById("id_cgst");
+            const sgstField = document.getElementById("id_sgst");
+            const igstField = document.getElementById("id_igst");
+            const taxAmountField = document.getElementById("id_tax_amount");
+            const totalAfterTaxField = document.getElementById("id_total_amount_after_task");
+            const totalInWordsField = document.getElementById("id_total_in_words");
+        
+            // Convert number to words
+            const numberToWords = (num) => {
+                const belowTwenty = [
+                    "Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+                    "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+                    "Seventeen", "Eighteen", "Nineteen"
+                ];
+                const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+                const thousands = ["", "Thousand", "Lakh", "Crore"];
+                if (num === 0) return "Zero";
+        
+                const toWords = (n) => {
+                    if (n < 20) return belowTwenty[n];
+                    if (n < 100) return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? " " + belowTwenty[n % 10] : "");
+                    if (n < 1000) return belowTwenty[Math.floor(n / 100)] + " Hundred" + (n % 100 !== 0 ? " " + toWords(n % 100) : "");
+                    return "";
+                };
+        
+                let word = "";
+                let place = 0;
+        
+                while (num > 0) {
+                    const chunk = num % 1000;
+                    if (chunk !== 0) {
+                        const chunkWord = toWords(chunk);
+                        word = chunkWord + (thousands[place] ? " " + thousands[place] : "") + (word ? " " + word : "");
+                    }
+                    num = Math.floor(num / 1000);
+                    place++;
+                }
+        
+                return word.trim();
+            };
+        
+            const calculateTotals = () => {
+                let totalBeforeTax = 0;
+        
+                // Sum up all item amounts
+                itemsBody.querySelectorAll("tr").forEach(row => {
+                    const amount = parseFloat(row.querySelector(".amount").value) || 0;
+                    totalBeforeTax += amount;
+                });
+        
+                // Parse CGST, SGST, and IGST
+                const cgst = parseFloat(cgstField.value) || 0;
+                const sgst = parseFloat(sgstField.value) || 0;
+                const igst = parseFloat(igstField.value) || 0;
+        
+                // Calculate total tax amount
+                const taxAmount = cgst + sgst + igst;
+        
+                // Calculate total amount after tax
+                const totalAfterTax = totalBeforeTax + taxAmount;
+        
+                // Update form fields
+                totalBeforeTaxField.value = totalBeforeTax.toFixed(2);
+                taxAmountField.value = taxAmount.toFixed(2);
+                totalAfterTaxField.value = totalAfterTax.toFixed(2);
+        
+                // Convert total amount after tax to words
+                totalInWordsField.value = numberToWords(Math.floor(totalAfterTax)) + " Only";
+            };
+        
+            const addRow = (item = {}) => {
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                    <td><input type="text" class="form-control description" value="${item.description || ''}" placeholder="Item description"></td>
+                    <td><input type="number" class="form-control amount" value="${item.amount || 0}" step="0.01"></td>
+                    <td><button type="button" class="btn btn-danger remove-item">Delete</button></td>
+                `;
+        
+                newRow.querySelector(".amount").addEventListener("input", calculateTotals);
+                newRow.querySelector(".remove-item").addEventListener("click", function () {
+                    newRow.remove();
+                    calculateTotals();
+                });
+        
+                itemsBody.appendChild(newRow);
+            };
+        
+            addItemBtn.addEventListener("click", () => addRow());
+        
+            document.getElementById("invoice-form").addEventListener("submit", function (event) {
+                event.preventDefault();
+        
+                const items = [];
+                itemsBody.querySelectorAll("tr").forEach(row => {
+                    const description = row.querySelector(".description").value;
+                    const amount = parseFloat(row.querySelector(".amount").value) || 0;
+        
+                    if (description.trim()) {
+                        items.push({ description, amount });
+                    }
+                });
+        
+                if (items.length === 0) {
+                    alert("Please add at least one item.");
+                    return;
+                }
+        
+                const hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "items";
+                hiddenInput.value = JSON.stringify(items);
+                this.appendChild(hiddenInput);
+        
+                this.submit();
+            });
+        
+            // Initial setup: Add one empty row and calculate totals
+            addRow();
+            calculateTotals();
+        
+            // Event listeners for CGST, SGST, and IGST changes
+            [cgstField, sgstField, igstField].forEach(field => {
+                field.addEventListener("input", calculateTotals);
+            });
+        });
+            </script>
+
+    <script>
+        document.getElementById('id_logo').addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('logoPreview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+    </script>
+
+{% endblock %}

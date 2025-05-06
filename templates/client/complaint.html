@@ -1,0 +1,164 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block nav %}
+
+<style>
+    section, .section {
+        color: var(--default-color);
+        background-color: var(--background-color);
+        padding: 40px 0;
+        scroll-margin-top: 77px;
+        overflow: clip;
+    }
+    .section-title p {
+        color: var(--heading-color);
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-family: var(--heading-font);
+    }
+    .section-title h2 {
+        font-size: 14px;
+        font-weight: 500;
+        padding: 0;
+        line-height: 1px;
+        margin: 0;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        color: color-mix(in srgb, var(--default-color), transparent 50%);
+        position: relative;
+    }
+
+    .contact .info-item i {
+        color: var(--accent-color);
+        background: 
+    color-mix(in srgb, var(--accent-color), transparent 92%);
+        font-size: 20px;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50px;
+        transition: all 0.3s ease-in-out;
+        margin-right: 15px;
+    }
+    .section-title {
+        padding-bottom: 60px;
+        position: relative;
+    }
+    .section-title h2::after {
+        content: "";
+        width: 120px;
+        height: 1px;
+        display: inline-block;
+        background: var(--accent-color);
+        margin: 4px 10px;
+    }
+</style>
+
+  <!-- Main Content -->
+  <div id="main-content" class="p-4">
+    <!-- Button Container -->
+    <div class="button-container">
+      <ul class="nav nav-tabs">
+        <a href="{% url 'client_dashboard' %}" class="btn btn-outline-primary mb-2 me-4">Services</a>
+        <a href="{% url 'client_request' %}" class="btn btn-outline-primary mb-2 me-4">Requests</a>
+        <a href="{% url 'complaint' %}" class="btn btn-outline-primary active mb-2 me-4">Complaint</a>        
+      </ul>
+    </div>
+    {% endblock %}
+
+{% block content %}
+<section id="contact" class="contact section">
+
+
+    <!-- <div class="container section-title aos-init aos-animate" data-aos="fade-up">
+
+      <p>Contact Us</p>
+    </div> -->
+
+    <div class="container aos-init aos-animate" data-aos="fade" data-aos-delay="100">
+
+      <!-- <div class="row gy-4">
+
+        <div class="col-lg-4">
+          <div class="info-item d-flex aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+            <i class="bi bi-geo-alt flex-shrink-0"></i>
+            <div>
+              <h3>Address</h3>
+              <p>Banjara Hills, Hyderabad</p>
+            </div>
+          </div>
+
+          <div class="info-item d-flex aos-init aos-animate" data-aos="fade-up" data-aos-delay="300">
+            <i class="bi bi-telephone flex-shrink-0"></i>
+            <div>
+              <h3>Call Us</h3>
+              <p>9154460129</p>
+            </div>
+          </div>
+
+          <div class="info-item d-flex aos-init aos-animate" data-aos="fade-up" data-aos-delay="400">
+            <i class="bi bi-envelope flex-shrink-0"></i>
+            <div>
+              <h3>Email Us</h3>
+              <p>info@beliebtfin.com</p>
+            </div>
+          </div>
+
+        </div> -->
+
+        <div class="col-lg-12">
+          <form method="post" class="php-email-form aos-init aos-animate" data-aos="fade-up" data-aos-delay="200">
+            {% csrf_token %}
+            <div class="row gy-4">
+
+              <div class="col-md-12">
+                {{form.subject}}
+              </div>
+              <div class="col-md-12">
+                {{form.message}}
+              </div>
+
+              {% if messages %}
+              <div>
+                  {% for message in messages %}
+                      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                          {{ message }}
+                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                  {% endfor %}
+              </div>
+          {% endif %}
+
+              <div class="col-md-12 text-center">
+                <button class="btn btn-outline-primary active mb-2 me-4 widget-content" type="submit">Send Message</button>
+              </div>
+
+            </div>
+          </form>
+        </div><!-- End Contact Form -->
+
+      </div>
+
+    </div>
+
+  </section>
+
+<script>
+    document.querySelector('.widget-content .default').addEventListener('click', function() {
+        Swal.fire({
+            position: 'center',
+            icon: 'success',
+            title: 'Placement set at default (center)',
+            showConfirmButton: false,
+            timer: 1500
+        })
+    })
+
+</script>
+
+{% endblock %}

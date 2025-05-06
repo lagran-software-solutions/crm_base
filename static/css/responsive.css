@@ -1,0 +1,9 @@
+/* Large Mobile :480px. */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+    .container {
+        width: 450px;
+    }
+}
+body .navbar .dropdown-menu{
+    left: -35px;
+}

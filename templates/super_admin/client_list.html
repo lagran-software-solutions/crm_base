@@ -1,0 +1,183 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive6 %}dashboardactive{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+
+<style>
+  .action-icons a,
+  .action-icons button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f1f1f1;
+    color: #333;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+  }
+
+  .action-icons a:hover,
+  .action-icons button:hover {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .action-icons a.manage:hover {
+    background-color: #28a745;
+  }
+
+  .action-icons a.edit:hover {
+    background-color: #ffc107;
+  }
+
+  .action-icons button.delete:hover {
+    background-color: #dc3545;
+  }
+
+  .action-icons i {
+    font-size: 18px;
+  }
+</style>
+
+
+<div id="main-content" class="p-lg-4 p-md-3 p-sm-2">
+  <!-- Button Container -->
+  <div class="button-container mb-3">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a href="{% url 'user_employee_list' 'client_list' %}" class="btn btn-outline-primary active mb-2 me-4">Client List</a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'user_employee_list' 'employee_list' %}" class="btn btn-outline-primary mb-2 me-4">Employee List</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="container-fluid mt-5">
+    <div class="row">
+      <div class="col-12">
+          <!-- Search and Delete Section -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="{% url 'client_create_form' %}" class="btn btn-success btn-sm" id="delete-selected">Create New Entity</a>
+          </div>
+
+          <!-- Table -->
+          <div class="table-responsive">
+            <table class="table table-hover request-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Name</th>
+                  <th>Created at</th>
+                  <th>Legal address</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                {% for obj in object_list %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ obj.name }}</td>
+                    <td>{{ obj.created_at }}</td>
+                    <td>{{ obj.legal_address }}</td>
+                    <td class="action-icons">
+                      <div class="d-flex flex-column flex-md-row justify-content-between align-items-stretch mt-2 gap-2">
+                        <!-- Manage Icon -->
+                        <a href="{% url 'list_of_client_services' obj.id %}" class="manage" title="Manage">
+                          <i class="fas fa-tachometer-alt"></i>
+                        </a>
+                        <!-- Edit Icon -->
+                        <a href="{% url 'client_update' obj.id %}" class="edit" title="Edit">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- Delete Icon -->
+                        <form method="post" action="{% url 'delete_user' user_type=user_type pk=obj.id %}" class="w-100">
+                          {% csrf_token %}
+                          <button type="submit" class="delete" onclick="return confirm('Are you sure you want to delete this user?');" title="Delete">
+                            <i class="fas fa-trash-alt"></i>
+                          </button>
+                        </form>
+                      </div>
+                    </td>                    
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dt--bottom-section d-sm-flex justify-content-sm-between text-center">
+      <div class="dt--pages-count mb-sm-0 mb-3">
+        <div class="dataTables_info" id="show-hide-col_info" role="status" aria-live="polite">
+          Showing page {{ page_obj.number }} of {{ paginator.num_pages }}
+        </div>
+      </div>
+
+      <div class="dt--pagination">
+        <div class="dataTables_paginate paging_simple_numbers">
+          <ul class="pagination">
+            {% if is_paginated %}
+              <!-- Previous Page -->
+              {% if page_obj.has_previous %}
+                <li class="paginate_button page-item previous">
+                  <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-controls="show-hide-col">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+                      <line x1="19" y1="12" x2="5" y2="12"></line>
+                      <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                  </a>
+                </li>
+              {% else %}
+                <li class="paginate_button page-item previous disabled">
+                  <a class="page-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+                      <line x1="19" y1="12" x2="5" y2="12"></line>
+                      <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                  </a>
+                </li>
+              {% endif %}
+
+              <!-- Page Numbers -->
+              {% for num in paginator.page_range %}
+                <li class="paginate_button page-item {% if page_obj.number == num %}active{% endif %}">
+                  <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+                </li>
+              {% endfor %}
+
+              <!-- Next Page -->
+              {% if page_obj.has_next %}
+                <li class="paginate_button page-item next">
+                  <a href="?page={{ page_obj.next_page_number }}" class="page-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </a>
+                </li>
+              {% else %}
+                <li class="paginate_button page-item next disabled">
+                  <a class="page-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </a>
+                </li>
+              {% endif %}
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

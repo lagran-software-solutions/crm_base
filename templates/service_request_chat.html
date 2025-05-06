@@ -1,0 +1,162 @@
+<style>
+  .chat-container {
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 10px;
+}
+
+.chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-date {
+    text-align: center;
+    font-size: 0.9rem;
+    margin: 10px 0;
+    color: #888;
+    font-weight: bold;
+}
+
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 60%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.admin {
+    background-color: #cfe2ff;
+    margin-left: auto;
+    text-align: right; 
+}
+
+.client {
+    background-color: #e9ecef;
+    margin-right: auto; 
+    text-align: left; 
+}
+
+.admin-time {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: left;
+}
+.client-time {
+    font-size: 0.8rem;
+    color: #666;
+    text-align: right;
+}
+
+.message-content {
+    font-size: 1rem;
+    word-wrap: break-word;
+    color: #333;
+}
+
+
+.chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.chat-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+</style>
+
+<div class="container mt-4">
+  <h6>Discussion</h6>
+  <div class="form-group">
+    <div class="card chat-container" id="chat-container" style="max-height: 500px; overflow-y: auto;"> 
+      <div class="card-body chat-box">
+        {% for date, messages_by_date in discussion_messages.items %}
+          <div class="chat-date">{{ date }}</div> 
+
+          <ul>
+            
+            {% for obj in messages_by_date %}
+              {% if obj.admin %}
+              <li class="chat-message {% if request.user.is_admin %}admin{% else %}client{% endif %}">
+                <span class="admin-time">{{ obj.created_at|date:"H:i" }}</span>
+                <strong>{{ obj.admin.get_full_name }}</strong>:
+                <div class="message-content">{{ obj.message }}</div>
+              </li>
+              {% else %}
+              <li class="chat-message {% if request.user.is_admin %}client{% else %}admin{% endif %}">
+                <span class="client-time">{{ obj.created_at|date:"H:i" }}</span>
+                <strong>{{ obj.client.get_full_name }}</strong>:
+                <div class="message-content">{{ obj.message }}</div>
+              </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div class="container mt-4">
+    <form id="chat-form" method="post" action="{% url 'service_request_chat' object.request_number %}">
+        {% csrf_token %}
+        <div class="input-group position-relative">
+          <textarea class="form-control" name="message" rows="5" placeholder="Add comments here..." style="padding-right: 40px;"></textarea>
+          <button class="position-absolute" type="submit" style="top: -8px; right: -1px; font-size: 27px; background: none; border: none; outline: none; z-index: 1000;">
+            <i class="fa-solid fa-square-arrow-up-right"></i>
+        </button>        
+      </div>
+      
+    </form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      // Function to scroll chat container to bottom
+      function scrollToBottom() {
+          var chatContainer = document.getElementById('chat-container');
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+  
+      // Call the function on page load
+      window.onload = function() {
+          scrollToBottom();
+      };
+  </script>
+
+  <script>
+    $(document).ready(function() {
+        // Handle form submission
+        $('#chat-form').submit(function(event) {
+            event.preventDefault(); 
+            var formData = $(this).serialize(); 
+            console.log('formdata: ', formData)
+
+            $.ajax({
+                url: $(this).attr('action'), 
+                method: 'POST', 
+                data: formData, 
+                success: function(response) {
+                  location.reload()
+                  window.location.hash = '#chat-container';
+                },
+                error: function(xhr, errmsg, err) {
+                    alert('Error sending message. Please try again.');
+                }
+            });
+        });
+    });
+</script>
+  

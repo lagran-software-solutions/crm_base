@@ -1,0 +1,184 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive10 %}dashboardactive{% endblock %}
+
+<!-- Main Content -->
+{% block content %}
+<div id="main-content" class="p-4">
+    <div class="container mt-5">
+        <h1 class="mb-4">Manage Services and SubServices</h1>
+
+        <!-- Add New Service Button -->
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#serviceModal">
+            Add New Service
+        </button>
+
+        <!-- Services Accordion -->
+        <div class="accordion" id="serviceAccordion">
+            {% for service in services %}
+            <div class="accordion-item">
+                <h2 class="accordion-header d-flex align-items-center" id="heading{{ service.id }}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ service.id }}" aria-expanded="false"
+                        aria-controls="collapse{{ service.id }}">
+                        {{ service.name }}
+                    </button>
+                    <!-- Edit Button -->
+                    <button class="btn btn-sm btn-warning ms-2" data-bs-toggle="modal" data-bs-target="#serviceModal"
+                        data-name="{{ service.name }}" data-service-id="{{ service.id }}">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <!-- Delete Button -->
+                    <form method="post" id="delete_service_{{ service.id }}" class="ms-2">
+                        {% csrf_token %}
+                        <input type="hidden" name="delete_service_id" value="{{ service.id }}">
+                        <button type="button" class="btn btn-sm btn-danger delete-service">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </form>
+                </h2>
+                <div id="collapse{{ service.id }}" class="accordion-collapse collapse"
+                    aria-labelledby="heading{{ service.id }}" data-bs-parent="#serviceAccordion">
+                    <div class="accordion-body">
+                        <!-- SubServices -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong>SubServices:</strong>
+                            <button class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                data-bs-target="#subServiceModal" data-service-id="{{ service.id }}">
+                                Add SubService
+                            </button>
+                        </div>
+                        <ul class="list-group mt-3">
+                            {% for subservice in service.sub_service.all %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ subservice.name }}
+                                <!-- Edit SubService -->
+                                 <div class="d-flex justify-content-end">
+                                <button class="btn btn-sm btn-warning mr-2 pr-3" data-bs-toggle="modal"
+                                    data-bs-target="#subServiceModal" data-subservice-id="{{ subservice.id }}"
+                                    data-name="{{ subservice.name }}" data-service-id="{{ subservice.service.id }}">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <!-- Delete SubService -->
+                                <form method="post" id="delete_subservice_{{ subservice.id }}" class="ml-5">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="delete_subservice_id" value="{{ subservice.id }}">
+                                    <button type="button" class="btn btn-sm btn-danger delete-subservice">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            </li>
+                            {% empty %}
+                            <li class="list-group-item text-muted">No SubServices available.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No services found. Add a new service to get started.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Service Modal -->
+    <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="serviceForm" method="post" action="{% url 'manage_services_subservices' %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="serviceModalLabel">Add/Edit Service</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ service_form.as_p }}
+                        <input type="hidden" name="service_form" value="true">
+                        <input type="hidden" name="service_id" id="modal_main_service_id" value="">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SubService Modal -->
+    <div class="modal fade" id="subServiceModal" tabindex="-1" aria-labelledby="subServiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="subServiceForm" method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="subServiceModalLabel">Add/Edit SubService</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="id_name" class="form-label">SubService Name</label>
+                        {{ subservice_form.name }}
+                        <input type="hidden" name="subservice_form" value="">
+                        <input type="hidden" name="subservice_id" id="modal_subservice_id" value="">
+                        <input type="hidden" name="service_id" id="modal_service_id" value="">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Handle Service Modal
+            const serviceModal = document.getElementById("serviceModal");
+            serviceModal.addEventListener("show.bs.modal", (event) => {
+                const button = event.relatedTarget;
+                const serviceId = button.getAttribute("data-service-id") || "";
+                const serviceName = button.getAttribute("data-name") || "";
+
+                serviceModal.querySelector("#modal_main_service_id").value = serviceId;
+                serviceModal.querySelector("#id_name").value = serviceName;
+            });
+
+            // Handle SubService Modal
+            const subServiceModal = document.getElementById("subServiceModal");
+            subServiceModal.addEventListener("show.bs.modal", (event) => {
+                const button = event.relatedTarget;
+                const subserviceId = button.getAttribute("data-subservice-id") || "";
+                const subserviceName = button.getAttribute("data-name") || "";
+                const serviceId = button.getAttribute("data-service-id") || "";
+
+                subServiceModal.querySelector("#modal_subservice_id").value = subserviceId;
+                subServiceModal.querySelector("#id_name").value = subserviceName;
+                subServiceModal.querySelector("#modal_service_id").value = serviceId;
+            });
+
+            // Delete Service
+            document.querySelectorAll(".delete-service").forEach(button => {
+                button.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const form = button.closest("form");
+                    if (confirm("Are you sure you want to delete this service?")) {
+                        form.submit();
+                    }
+                });
+            });
+
+            // Delete SubService
+            document.querySelectorAll(".delete-subservice").forEach(button => {
+                button.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    const form = button.closest("form");
+                    if (confirm("Are you sure you want to delete this subservice?")) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+</div>
+{% endblock %}

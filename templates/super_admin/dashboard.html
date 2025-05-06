@@ -1,0 +1,242 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive9 %}dashboardactive {% endblock %}
+{% block nav %}
+<div id="main-content" class="p-4">
+
+  {% endblock %}
+
+  {% block content %}
+
+
+  <!-- invoice dashboard -->
+  <div class="container my-4">
+    <div class="row g-4">
+      <!-- Cancelled Invoices -->
+      <div class="col-md-3">
+        <a href="{% url 'invoice_list' 'cancelled' %}" class="text-decoration-none">
+          <div class="card shadow-sm text-center border-danger">
+            <div class="card-body">
+              <div class="icon-container mb-2">
+                <i class="fas fa-times-circle text-danger" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title text-danger">Cancelled</h5>
+              <p class="card-text">Total Amount: ₹{{ invoice_summary.cancelled.sub_total }}</p>
+              <small class="text-muted">{{ invoice_summary.cancelled.count }} Invoices</small>
+            </div>
+          </div>
+        </a>
+      </div>
+
+
+      <!-- Paid/Success Invoices -->
+      <div class="col-md-3">
+        <a href="{% url 'invoice_list' 'paid' %}" class="text-decoration-none">
+          <div class="card shadow-sm text-center border-success">
+            <div class="card-body">
+              <div class="icon-container mb-2">
+                <i class="fas fa-check-circle text-success" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Paid</h5>
+              <p class="card-text">Total Amount: ₹{{invoice_summary.paid.sub_total}}</p>
+              <small class="text-muted">{{invoice_summary.paid.count}} Invoices</small>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Pending Invoices -->
+      <div class="col-md-3">
+        <a href="{% url 'invoice_list' 'pending' %}" class="text-decoration-none">
+          <div class="card shadow-sm text-center border-warning">
+            <div class="card-body">
+              <div class="icon-container mb-2">
+                <i class="fas fa-hourglass-half text-warning" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Pending</h5>
+              <p class="card-text">Total Amount: ₹{{invoice_summary.pending.sub_total}}</p>
+              <small class="text-muted">{{invoice_summary.pending.count}} Invoices</small>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Empty Invoices -->
+      <div class="col-md-3">
+        <a href="{% url 'invoice_list' 'empty' %}" class="text-decoration-none">
+          <div class="card shadow-sm text-center border-secondary">
+            <div class="card-body">
+              <div class="icon-container mb-2">
+                <i class="fas fa-file-alt text-secondary" style="font-size: 2rem;"></i>
+              </div>
+              <h5 class="card-title">Empty</h5>
+              <p class="card-text">Total Amount: ₹{{invoice_summary.empty.sub_total}}</p>
+              <small class="text-muted">{{invoice_summary.empty.count}} Invoices</small>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- end invoice dashboard -->
+
+  <div class="container my-4">
+    <div class="row g-4">
+      <!-- Client Chart Section -->
+      <div class="col-md-6">
+        <div class="chart-container">
+          <form method="post" action="{% url 's_dashboard' %}">
+            {% csrf_token %}
+            <div class="date-filter">
+              {{ form.client_start_date.label_tag }}
+              {{ form.client_start_date }}
+              {{ form.client_end_date.label_tag }}
+              {{ form.client_end_date }}
+              <!-- <a href="" class="refresh-icon" title="Refresh">
+                <i class="fas fa-sync"></i>
+            </a> -->
+              <button type="submit" class="go-button">Go</button>
+            </div>
+          </form>
+
+          <canvas id="client" style="width:100%;max-width:600px"></canvas>
+          <div class="chart-title">Clients</div>
+          <ul class="chart-legend">
+            <li>
+              <span class="legend-color" style="background-color:#2b5797 ;" title="Pending Requests"></span>
+              <a href="{% url 'dashboard' user_id=0 user_type='client' status_type='in_progress' %}"
+                title="Pending Requests">Pending Requests</a>
+            </li>
+            <li>
+              <span class="legend-color" style="background-color: #00aba9;" title="Completed Requests"></span>
+              <a href="{% url 'dashboard' user_id=0 user_type='client' status_type='completed' %}"
+                title="Completed Requests">Completed Requests</a>
+            </li>
+            <li>
+              <span class="legend-color" style="background-color:#b91d47 ;" title="Cancelled Task"></span>
+              <a href="{% url 'dashboard' user_id=0 user_type='client' status_type='cancelled' %}"
+                title="Completed Task">Cancelled Task</a>
+              <!-- <a href="{% url 'dashboard' user_id=0 user_type='client' status_type='cancelled' %}" title="Completed Task">Cancelled Task</a> -->
+            </li>
+            <li>
+              <span class="legend-color" style="background-color: #e8c3b9;" title="Empty"></span>
+              <a href="{% url 'dashboard' user_id=0 user_type='client' status_type='empty' %}" title="Empty">Empty</a>
+              <!-- <a href="{% url 'dashboard' user_id=0 user_type='client' status_type='all_request' %}" title="Empty">Empty</a> -->
+            </li>
+          </ul>
+
+        </div>
+      </div>
+
+      <!-- Admin Chart Section -->
+      <div class="col-md-6">
+        <div class="chart-container">
+          <form method="post" action="{% url 's_dashboard' %}">
+            {% csrf_token %}
+            <div class="date-filter">
+              {{ form.admin_start_date.label_tag }}
+              {{ form.admin_start_date }}
+              {{ form.admin_end_date.label_tag }}
+              {{ form.admin_end_date }}
+
+              <button class="go-button" type="submit">Go</button>
+            </div>
+          </form>
+          <canvas id="admin" style="width:100%;max-width:600px"></canvas>
+          <div class="chart-title">Admins</div>
+          <ul class="chart-legend">
+
+            <li>
+              <span class="legend-color" style="background-color:#2b5797;" title="Pending Requests"></span>
+              <a href="{% url 'dashboard' user_id=0 user_type='admin' status_type='in_progress' %}"
+                title="Pending Requests">Pending Requests</a>
+            </li>
+            <li>
+              <span class="legend-color" style="background-color: #00aba9;" title="Completed Requests"></span>
+              <a href="{% url 'dashboard' user_id=0 user_type='admin' status_type='completed' %}"
+                title="Completed Requests">Completed Requests</a>
+            </li>
+            <span class="legend-color" style="background-color:#b91d47;" title="Cancelled Task"></span>
+            <a href="{% url 'dashboard' user_id=0 user_type='admin' status_type='cancelled' %}"
+              title="Completed Task">Cancelled Request</a>
+            </li>
+            <li>
+              <span class="legend-color" style="background-color: #e8c3b9;" title="Empty"></span>
+              <a href="{% url 'dashboard' user_id=0 user_type='admin' status_type='empty' %}" title="Empty">Empty</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <script>
+    var legendLabels = ["Pending Requests", "Completed Requests", "Completed Task", "Empty"];
+    var clientData = [{{ client_status.in_progress }}, {{ client_status.completed }}, {{ client_status.cancelled }}, {{ client_status.empty }}];
+    var adminData = [{{ admin_status.in_progress }}, {{ admin_status.completed }}, {{ admin_status.cancelled }}, {{ admin_status.empty }}];
+    var barColors = ["#00aba9", "#2b5797", "#b91d47", "#e8c3b9"];
+
+    // Function to check if all values in an array are zero
+    function isAllZero(data) {
+      return data.every(value => value === 0);
+    }
+
+    // Display "No data found" or the chart based on data for client
+    if (isAllZero(clientData)) {
+      document.getElementById("client").outerHTML = "<p>No data found for client</p>";
+    } else {
+      new Chart(document.getElementById("client"), {
+        type: "pie",
+        data: {
+          labels: legendLabels,  // Correct place for the labels
+          datasets: [{
+            backgroundColor: barColors,
+            data: clientData
+          }]
+        },
+        options: {
+          legend: { display: false }
+        }
+      });
+    }
+
+    if (isAllZero(adminData)) {
+      document.getElementById("admin").outerHTML = "<p>No data found for admin</p>";
+    } else {
+      new Chart(document.getElementById("admin"), {
+        type: "pie",
+        data: {
+          labels: legendLabels,
+          datasets: [{
+            backgroundColor: barColors,
+            data: adminData
+          }]
+        },
+        options: {
+          legend: { display: false }
+        }
+      });
+    }
+  </script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get today's date in YYYY-MM-DD format
+      const today = new Date();
+      const day = String(today.getDate()).padStart(2, '0');
+      const month = String(today.getMonth() + 1).padStart(2, '0');
+      const year = today.getFullYear();
+      const maxDate = `${year}-${month}-${day}`;
+
+      // Set the max attribute for all date input fields
+      document.querySelectorAll('input[type="date"]').forEach(function (dateInput) {
+        dateInput.setAttribute("max", maxDate);
+      });
+    });
+  </script>
+  {% endblock %}

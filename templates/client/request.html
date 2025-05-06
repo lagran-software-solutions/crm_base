@@ -1,0 +1,138 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive3 %}dashboardactive {% endblock %}
+
+{% block nav %}
+<!-- Main Content -->
+<div id="main-content" class="p-4">
+  <!-- Button Container -->
+  <div class="button-container">
+    <ul class="nav nav-tabs">
+      <a href="{% url 'client_dashboard' %}" class="btn btn-outline-primary mb-2 me-4">Services</a>
+      <a href="{% url 'client_request' %}" class="btn btn-outline-primary active mb-2 me-4">Requests</a>
+      <a href="{% url 'complaint' %}" class="btn btn-outline-primary mb-2 me-4">Complaint</a>      
+    </ul>
+  </div>
+  {% endblock %}
+
+  {% block content %}
+  <div class="container-fluid mt-5">
+    <div class="row">
+      <div class="col-12">
+        <div class="table-responsive">
+          <table class="table table-hover request-table">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Request No.</th>
+                <th>Request Service</th>
+                <th>Requested Date</th>
+                <th>Status</th>
+                <th>Assigned To Employee</th>
+                <th>Date of Completion</th>
+                <th>My Folder</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for obj in object_list %}
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td>
+                  <a href="{% url 'request-detail' obj.request_number %}">
+                    <span class="req-number">{{ obj.request_number }}</span>
+                  </a>
+                </td>
+
+                <td>
+                  {% for subservice in obj.sub_services.all %}
+                  {{ subservice }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+                <td>{{ obj.request_date|date:"Y-m-d" }}</td>
+                <td><span
+                    class="badge badge-light-{% if obj.status == 'in_progress' %}warning {% endif %}{% if obj.status == 'empty' %}empty {% endif %}{% if obj.status == 'completed' %}success {% endif %}{% if obj.status == 'cancelled' %}cancelled {% endif %} req-status">{{obj.get_status_display }}</span></td>
+                <td>{% if obj.assigned_to_employee %}{{ obj.assigned_to_employee }}{% else %}Wait .. {% endif %}</td>
+                <td>{% if obj.date_of_completion %}{{obj.date_of_completion|date:"Y-m-d"}}{% else %}Wait .. {% endif %}</td>
+                <td><a href="{% url 'file' obj.service_request.first.pk obj.service_request.first.slug %}"><button
+                      class="btn-folder">Folder</button></a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dt--bottom-section d-sm-flex justify-content-sm-between text-center">
+    <div class="dt--pages-count mb-sm-0 mb-3">
+      <div class="dataTables_info" id="show-hide-col_info" role="status" aria-live="polite">
+        Showing page {{ page_obj.number }} of {{ paginator.num_pages }}
+      </div>
+    </div>
+
+    <div class="dt--pagination">
+      <div class="dataTables_paginate paging_simple_numbers">
+        <ul class="pagination">
+          {% if is_paginated %}
+            <!-- Previous Page -->
+            {% if page_obj.has_previous %}
+            <li class="paginate_button page-item previous">
+              <a href="?page={{ page_obj.previous_page_number }}" class="page-link" aria-controls="show-hide-col">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-arrow-left">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+              </a>
+            </li>
+            {% else %}
+            <li class="paginate_button page-item previous disabled">
+              <a class="page-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-arrow-left">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg></a>
+            </li>
+            {% endif %}
+    
+            <!-- Page Numbers -->
+            {% for num in paginator.page_range %}
+            <li class="paginate_button page-item {% if page_obj.number == num %}active{% endif %}">
+              <a href="?page={{ num }}" class="page-link">{{ num }}</a>
+            </li>
+            {% endfor %}
+    
+            <!-- Next Page -->
+            {% if page_obj.has_next %}
+            <li class="paginate_button page-item next">
+              <a href="?page={{ page_obj.next_page_number }}" class="page-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                     class="feather feather-arrow-right">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </li>
+            {% else %}
+            <li class="paginate_button page-item next disabled">
+              <a class="page-link"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="feather feather-arrow-right">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg></a>
+            </li>
+            {% endif %}
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    
+
+</div>
+{% endblock %}

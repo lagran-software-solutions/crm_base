@@ -1,0 +1,10 @@
+venv
+.idea
+*.pyc
+env
+logs/
+db.sqlite3
+.vscode
+media
+secrets.ini
+# /static

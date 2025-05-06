@@ -1,0 +1,123 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive5 %}dashboardactive{% endblock %}
+{% block navactive8 %}dashboardactive{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/chat.css' %}" />
+<style>
+    .chat-profile.is_active {
+        background-color: #f0f0f0;
+    }
+</style>
+<div id="main-content">
+    {% if user.is_admin %}
+<div class="chat-layout">
+    <div class="chat-profiles-container">
+        <form id="send_message_form">
+            
+        <input type="hidden" value="{{user.id}}" id="logged_in_user"></input>
+
+        {% for obj in threads %}
+        <div class="chat-profile" data-thread-id="{{ obj.id }}"
+            id="chat-function",
+             onclick=" setactiveThread({{obj.id}}); setOtherUserId({% if obj.first_person == user %}{{ obj.second_person.id }}{% else %}{{ obj.first_person.id }}{% endif %}); openChat('{% if obj.first_person == user %}{{ obj.second_person.get_full_name }}-{{ obj.second_person.mobile }}{% else %}{{ obj.first_person.get_full_name }}-{{ obj.first_person.mobile }}{% endif %}'); markMessagesAsSeen({{ obj.id }});">
+            <div class="profile-info" style="display: flex;">
+                <h1 style="font-size: 20px;padding: 6px 10px;align-items: center;text-align: center;">{{obj.id}} : </h1>
+                <!-- <p>Let's catch up soon!</p> -->
+                {% if obj.first_person == user %}
+                    <h3>{{ obj.second_person.get_full_name }}</h3>
+                {% else %}
+                    <h3>{{ obj.first_person.get_full_name }}</h3>
+                {% endif %}
+                {% if obj.unseencount > 0 %}
+                <span class="unseen1-count" id="unseen_count_{{obj.id}}">
+                    {{ obj.unseencount }}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    
+    </div>
+
+    <div class="chat-container" id="chat-container" >
+        <div class="chat-header">
+            <div class="back-button" onclick="closeChat()">&lt;</div>
+            <div class="chat-info">
+                <h2 id="chat-with">Chat</h2>
+                <!-- <p>Online</p> -->
+            </div>
+            <div class="options-button">⋮</div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+           
+        </div>
+
+        <div class="chat-input">
+            <input type="text" id="chat-input-id" placeholder="Type a message...">
+            <button class="send-button">Send</button>
+        </div>
+    </form>
+    </div>
+</div>
+{% else %}
+<h1 style="font-size: 31px;
+    font-family: poppins;
+    font-weight: 600;
+    text-align: center;
+    padding: 20px;">Only admin can access this chat page</h1>
+{% endif %}
+</div>
+<script>
+    const chats = {{ chats|safe }};
+</script>
+<script type="text/javascript">
+    function markMessagesAsSeen(thread_id) {
+        const url = "{% url 'mark_messages_as_seen' 0 %}".replace('/0/', `/${thread_id}/`);
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken'), 
+            }
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            if (data.success) {
+                <!-- location.reload(); -->
+                console.log("Messages marked as seen for thread:", thread_id);
+                // Optionally, you can update the unseen message count in the DOM here
+                const unseenCountElement = document.querySelector(`.chat-profile[data-thread-id='${thread_id}'] .unseen-count`);
+                if (unseenCountElement) {
+                    unseenCountElement.textContent = '';  // Set unseen count to 0 after marking as seen
+                }
+            } else {
+                console.error(data.error);
+            }
+        }).catch(error => {
+            console.error("Error:", error);
+        });
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+</script>
+
+
+{% endblock %}
+{% block script %}
+<script src="{% static 'js/chat.js' %}"></script>{% endblock %}

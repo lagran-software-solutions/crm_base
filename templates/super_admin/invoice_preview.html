@@ -1,0 +1,591 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f9;
+    padding: 0;
+    margin: 0;
+  }
+
+  .invoice-header {
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 8px;
+}
+.invoice-header h1 {
+    font-size: 20px;
+    margin-left: 80px;
+    color: #495057;
+    margin-bottom: 5px;
+}
+.invoice-header img.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 60px;
+    height: 60px;
+}
+.table-bordered th, .table-bordered td {
+    vertical-align: middle;
+    text-align: center;
+    border-color: #dee2e6;
+    padding: 6px;
+}
+.table-bordered th {
+    background-color: #f1f1f1;
+}
+.terms {
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+}
+.footer {
+    margin-top: 10px;
+    font-size: 12px;
+    text-align: center;
+    color: #6c757d;
+}
+.qr-scanner {
+    margin-top: 5px;
+    width: 80px;
+    height: 80px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 5px;
+}
+.section-title {
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #495057;
+    margin-top: 18px;
+}
+
+
+  .invoice-content {
+    flex: 1;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f1f1f1;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+  }
+
+
+  .header .invoice-info {
+    text-align: right;
+  }
+
+  .header .invoice-info h4 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+  }
+
+  .header .invoice-info p {
+    margin: 2px 0;
+    font-size: 14px;
+    color: #555;
+  }
+
+  .details {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .details .info-block {
+    width: 48%;
+  }
+
+  .details h5 {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 5px;
+  }
+
+  .details p {
+    font-size: 14px;
+    color: #777;
+    margin: 2px 0;
+  }
+
+  .table-responsive {
+    margin-bottom: 20px;
+  }
+
+  .invoice-table th,
+  .invoice-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #f1f1f1;
+    font-size: 14px;
+  }
+
+  .invoice-table th {
+    background-color: #f9f9f9;
+    color: #333;
+    font-weight: 600;
+  }
+
+  .invoice-summary {
+    float: right;
+    width: 40%;
+  }
+
+  .invoice-summary table {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .invoice-summary td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .invoice-summary td:first-child {
+    font-weight: 500;
+  }
+
+  .invoice-summary .total {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .buttons {
+    width: 150px;
+    position: absolute;
+    top: 30px;
+    right: -180px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .buttons button {
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    text-align: center;
+    background-color: #007bff;
+    color: white;
+    border: none;
+  }
+
+  .buttons .btn-download {
+    background-color: #28a745;
+  }
+
+  .buttons .btn-edit {
+    background-color: #ffc107;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #aaa;
+  }
+  .invoice-header{
+    display: flex;
+  }
+  .invoice-details{
+  display: flex !important;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width:760px){
+  .invoice-header{
+    display: block !important;
+  }
+}
+/* Print styles */
+@media print {
+  body * {
+    visibility: hidden;
+    font-size: 13px;
+  }
+  @page {
+  
+  margin: 0.2in 0.2in 1in 0.2in;
+}
+
+.invoice-details{
+  display: flex !important;
+  flex-wrap: wrap;
+
+}
+.bank-contact{
+  display: grid;
+  grid-template-columns: 4fr 4fr 4fr;
+
+}
+
+.bank-contact .col-md-4 p{
+  margin-bottom: -1px !important;
+}
+  .invoice-container,
+  .invoice-container * {
+    visibility: visible;
+  }
+
+  .invoice-container {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    margin: 0 auto;
+    max-width: 100%; 
+  }
+
+  .buttons {
+    display: none;
+  }
+
+  /* @page {
+    size: A4;
+ 
+  } */
+  .invoice-header{
+    display: flex;
+  }
+}
+
+
+
+  .preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.img-thumbnail {
+    width: 320px;
+    max-height: 90px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.invoice-header {
+  text-align: center;
+  margin-bottom: 10px;
+  position: relative;
+  background-color: #e9ecef;
+  padding: 15px;
+  border-radius: 8px;
+}
+.invoice-header h1 {
+  font-size: 20px;
+  margin-left: 80px;
+  color: #495057;
+  margin-bottom: 5px;
+}
+.invoice-header img.logo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 60px;
+  height: 60px;
+}
+.table-bordered th, .table-bordered td {
+  vertical-align: middle;
+  text-align: center;
+  border-color: #dee2e6;
+  padding: 1px;
+}
+.table-bordered th {
+  background-color: #f1f1f1;
+}
+.terms {
+  font-size: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
+.footer {
+  margin-top: 10px;
+  font-size: 12px;
+  text-align: center;
+  color: #6c757d;
+}
+.qr-scanner {
+  margin-top: 5px;
+  width: 80px;
+  height: 80px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 5px;
+}
+.section-title {
+  background-color: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  font-weight: bold;
+  /* color: #495057; */
+  color: black;
+}
+</style>
+
+<div id="main-content" class="p-4">
+
+  <div class="container my-3">
+      <div class="row">
+          <!-- Invoice content section (on the left side) -->
+              <div class="col-md-10 invoice-container" id="pdf-invoice-container">
+                <div class="invoice-header">
+                 <div>
+                  {% if object.logo %}
+                  <img id="logoPreview" 
+                       src="{{ object.logo.url }}" 
+                       alt="Logo Preview" 
+                       class="img-thumbnail"/>
+                  {% else %}
+                  <img id="logoPreview" 
+                       src="https://via.placeholder.com/150x50?text=LOGO" 
+                       alt="Default Logo" 
+                       class="img-thumbnail" />
+                  {% endif %}
+                 </div>
+                   <div>
+                    <h1 class="">{{object.company_name}}</h1>
+                    <p class="mb-0">{{object.company_address|safe}}</p>
+                    <p class="mb-0">{{object.company_contact|safe}}</p>
+                   </div>
+                </div>
+
+              <!-- Invoice Details Section -->
+              <div class="row mb-2">
+               <div class=" invoice-details">
+                <div class="col-4">
+                  <strong>Range:</strong> {{object.range_address}}
+              </div>
+              <div class="col-4">
+                  <strong>Division:</strong> {{object.division}}
+              </div>
+              <div class="col-4">
+                  <strong>Commissioner:</strong> {{object.commissioner}}
+              </div>
+               </div>
+              </div>
+
+              <h3 class="text-center section-title">INVOICE</h3>
+
+              <table class="table table-bordered border-secondary table-sm">
+                  <tbody>
+                      <tr>
+                          <th style="width: 50%;">Details of Receiver</th>
+                          <th style="width: 25%;">Reverse Charge (Y/N)</th>
+                          <th style="width: 25%;">No</th>
+                      </tr>
+                      <tr>
+                          <td><strong>Name:</strong> {{object.receiver_name}}</td>
+                          <td><strong>Invoice Number:</strong></td>
+                          <td>{{object.invoice_number}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>Address:</strong>{{object.receiver_address}}</td>
+                          <td><strong>Invoice Date:</strong></td>
+                          <td>{{object.invoice_date}}</td>
+                      </tr>
+                      <tr>
+                          <td></td>
+                          <td><strong>Place of Supply:</strong></td>
+                          <td>{{object.place_of_supply}}</td>
+                      </tr>
+                      <tr>
+                          <td></td>
+                          <td><strong>GSTN:</strong></td>
+                          <td>{{object.gstn}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>GSTIN:</strong></td>
+                          <td><strong>State:</strong></td>
+                          <td>{{object.state}}</td>
+                      </tr>
+                      <tr>
+                          <td></td>
+                          <td><strong>State Code:</strong></td>
+                          <td>{{object.state_code}}</td>
+                      </tr>
+                  </tbody>
+              </table>
+
+              <!-- Item List Section -->
+              <table class="table table-bordered border-secondary table-sm">
+                  <thead>
+                      <tr>
+                          <th>Description</th>
+                          <th>Amount (in Rs.)</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      {% for item in items %}
+                      <tr>
+                          <td>{{ item.description }}</td>
+                          <td>₹{{ item.amount }}</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+
+              <!-- Total and Bank Details Section -->
+              <table class="table table-bordered border-secondary table-sm">
+                  <tbody>
+                      <tr>
+                          <td><strong>Total Amount in Words</strong></td>
+                          <td>{{object.total_in_words}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>Total Amount Before Tax</strong></td>
+                          <td>{{object.total_amount_before_task}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>Add: CGST</strong></td>
+                          <td>{{object.cgst}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>Add: SGST</strong></td>
+                          <td>{{object.sgst}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>Add: IGST</strong></td>
+                          <td>{{object.igst}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>Tax Amount: GST</strong></td>
+                          <td>{{object.tax_amount}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>Total Amount After Tax</strong></td>
+                          <td>{{object.total_amount_after_task}}</td>
+                      </tr>
+                      <tr>
+                          <td><strong>GST Payable on RC</strong></td>
+                          <td>Nil</td>
+                      </tr>
+                  </tbody>
+              </table>
+
+              <!-- Additional Bank & Contact Details -->
+              <div class="row">
+                 <div class="bank-contact row">
+                  <div class="col-md-4">
+                    <p><strong>Bank Details:</strong></p>
+                    <p>Account No: {{object.bank_account}}</p>
+                    <p>Branch IFSC No: {{object.ifsc}}</p>
+                    <p>Branch: {{object.branch}}</p>
+                
+                </div>
+                <div class="col-md-4">
+                  {% if object.qr_code %}
+                  <img id="logoPreview" 
+                       src="{{ object.qr_code.url }}" 
+                       alt="QR Scanner" class="qr-scanner"/>
+                  {% else %}
+                  <img id="logoPreview" 
+                       src="https://via.placeholder.com/150x50?text=LOGO" 
+                       alt="QR Scanner" class="qr-scanner" />
+                  {% endif %}
+                </div>
+                <div class="col-md-4 column text-end ">
+                    <p>PAN: {{object.pan}}</p>
+                    <p>TDS Rate:{% if ojbect.tds_rate %} {{ojbect.tds_rate}}{% else %}N/A{% endif %}</p>
+                    <p>Payment:{% if ojbect.payment %}{{ojbect.payment}}{% else %}Immediate{% endif %}</p>
+                    <p>PhonePe/GPay: {{object.gpay_phone}}</p>
+                </div>
+                 </div>
+              </div>
+
+              <p class="terms">Certified that the particulars given above are true and correct.<br>For {{ojbect.company_name}}</p>
+              <p class="footer">This is a System Generated Invoice. Signature is not required.<br>Subject to Hyderabad Jurisdiction [E & OE]</p>
+          </div>
+
+          <!-- Button Section (on the right side) -->
+          <div class="col-md-2 d-flex flex-column align-items-end">
+            <button id="action-print" class="btn btn-primary mb-2 action-print">Print</button>
+            <button onclick="downloadInvoice()" class="btn btn-success mb-2">Download</button>
+            <a href="{% url 'invoicerecord_update' object.id %}" class="btn btn-warning">Edit</a>
+          </div>
+          
+      </div>
+  </div>
+</div>
+
+
+
+  <script>
+    document.querySelector('.action-print').addEventListener('click', function (event) {
+      event.preventDefault();
+
+      window.print();
+    });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.4.1/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  
+  
+
+  <script>
+    async function downloadInvoice() {
+      const { jsPDF } = window.jspdf;
+      const invoiceElement = document.getElementById('pdf-invoice-container');
+  
+      if (!invoiceElement) {
+        console.error('Invoice container not found!');
+        return;
+      }
+  
+      try {
+        const pdf = new jsPDF({
+          unit: 'px',
+          format: 'a4', 
+        });
+
+        const canvas = await html2canvas(invoiceElement, {
+          scale: 2, 
+          useCORS: true, 
+        });
+  
+        const imgData = canvas.toDataURL('image/png');
+        const imgWidth = pdf.internal.pageSize.getWidth(); 
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const pageHeight = pdf.internal.pageSize.getHeight();
+  
+        let heightLeft = imgHeight;
+        let position = 0;
+  
+        while (heightLeft > 0) {
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+          if (heightLeft > 0) {
+            position -= pageHeight; 
+            pdf.addPage(); 
+          }
+        }
+  
+        pdf.save('invoice.pdf');
+      } catch (error) {
+        console.error('Error generating PDF:', error);
+      }
+    }
+  </script>
+  
+  {% endblock %}

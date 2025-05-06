@@ -1,0 +1,248 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+
+
+{% block content %}
+<style>
+  .eyeopen {
+    background: url("https://careerbucket.blr1.digitaloceanspaces.com/static/img/eyeOpen.svg");
+    height: 17px;
+    width: 16px;
+    display: block;
+    position: absolute;
+    margin-block: -27px;
+    right: 88px;
+    bottom: 194px;
+}
+
+.eyeclose {
+    background: url("https://careerbucket.blr1.digitaloceanspaces.com/static/img/eyeClose.svg");
+    height: 17px;
+    width: 16px;
+    display: block;
+    position: absolute;
+    margin-block: -56px;
+    right: 88px;
+    bottom: 194px;
+}
+
+</style>
+<div id="main-content" class="p-4">
+<div class="card">
+
+<section class="section profile">
+    <div class="row">
+      <div class="col-xl-4">
+        <div class="card">
+          <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+            {% if object.profile_pic %}
+            <img src="{{object.profile_pic.url}}" alt="Profile" class="rounded-circle" style="height: 120px; width: 120px;">
+            {% else %}
+            <i class="fa-solid fa-user-tie" style="font-size: 135px;"></i>
+            {% endif %}
+            <h2>{{object.get_full_name}}</h2>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-xl-8">
+
+        <div class="card">
+          <div class="card-body pt-3">
+            <!-- Bordered Tabs -->
+            <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
+
+              <li class="nav-item">
+                <a href="{% url 'profile' profile_type='overview' %}" class="nav-link {% if profile_type == 'overview' %}active{% endif %}">
+                    Overview
+                </a>
+            </li>
+              <li class="nav-item">
+                <a href="{% url 'profile' profile_type='edit_profile' %}" class="nav-link {% if profile_type == 'edit_profile' %}active{% endif %}">
+                    Edit Profile
+                </a>
+            </li>
+              <li class="nav-item" role="presentation">
+                <a href="{% url 'change_password' %}" class="nav-link {% if request.path == '/change-password/' %}active{% endif %}">
+                    Change Password
+                </a>
+            </li>
+
+            </ul>
+
+            {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if profile_type == 'overview' %}
+            <div class="tab-content pt-2">
+              <div class="tab-pane fade profile-overview active show" id="profile-overview" role="tabpanel">
+                <h5 class="card-title">Profile Details</h5>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label ">Full Name</div>
+                  <div class="col-lg-9 col-md-8">{{object.get_full_name}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Phone</div>
+                  <div class="col-lg-9 col-md-8">{{object.country_code}}-{{object.mobile}}</div>
+                </div>
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8">{{object.email}}</div>
+                </div>
+              </div>
+            {% endif %}
+           
+                {% if profile_type == 'edit_profile' %}
+                <!-- Profile Edit Form -->
+                <form method="post" enctype="multipart/form-data" id="profile_update_form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                        
+                        {% if field.errors %}
+                            <div class="alert alert-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+                <!-- End Profile Edit Form -->
+
+              </div>
+{% endif %}
+{% if request.path == '/change-password/' %}
+              <!-- Change Password Form -->
+              <form method="post">
+                {% csrf_token %}
+                
+                <!-- Loop through all form fields -->
+                {% for field in form %}
+                    <div class="form-group mb-3">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+                       
+                        <!-- Display errors for the field -->
+                        {% if field.errors %}
+                            <div class="text-danger">
+                                {% for error in field.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+                {% endif %}
+              </div> 
+<!-- End Change Password Form -->
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+</section>
+</div>
+</div>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("profile_update_form");
+    const fields = form.querySelectorAll("input, select, textarea");
+
+    // Attach real-time validation to each field
+    fields.forEach((field) => {
+        field.addEventListener("input", () => validateField(field));
+        field.addEventListener("blur", () => validateField(field));
+    });
+
+    // Validate all fields on form submission
+    form.addEventListener("submit", (e) => {
+        let formIsValid = true;
+
+        fields.forEach((field) => {
+            if (!validateField(field)) {
+                formIsValid = false;
+            }
+        });
+
+        // Prevent form submission if any field is invalid
+        if (!formIsValid) {
+            e.preventDefault();
+        }
+    });
+});
+
+function validateField(field) {
+    let errorMessage = field.parentNode.querySelector(".error-message");
+
+    // Create the error message element if it doesn't exist
+    if (!errorMessage) {
+        errorMessage = createErrorMessage(field);
+    }
+
+    let valid = true;
+
+    // Validation rules based on field name
+    switch (field.name) {
+        case "email":
+            valid = validateEmail(field.value);
+            errorMessage.textContent = valid ? "" : "Please enter a valid email address.";
+            break;
+        case "mobile":
+            valid = validateMobile(field.value);
+            errorMessage.textContent = valid ? "" : "Please enter a valid mobile number (10 digits).";
+            break;
+        // Add other fields here as needed
+    }
+
+    errorMessage.style.display = valid ? "none" : "block";
+    return valid;
+}
+
+// Helper functions for specific validations
+function validateEmail(email) {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
+
+function validateMobile(mobile) {
+    const mobilePattern = /^\d{10}$/;
+    return mobilePattern.test(mobile);
+}
+
+// Helper to create an error message container
+function createErrorMessage(field) {
+    const errorMessage = document.createElement("div");
+    errorMessage.className = "error-message text-danger";
+    errorMessage.style.display = "none";
+    field.parentNode.appendChild(errorMessage);
+    return errorMessage;
+}
+
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,109 @@
+.main-content {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.fa-folder{
+    color: rgb(72, 70, 70);
+}
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+.sidepanel .fa-folder{
+    color: #fff;
+}
+.folder, .file {
+    width: 150px;
+    height: 160px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.folder i, .file i {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+.folder:hover, .file:hover {
+    background-color: #f1f1f1;
+}
+.hidden {
+    display: none;
+}
+.humburger-user-info .icon-container {
+    display: none;
+}
+.fa-remove{
+    font-size:20px!important;
+    margin-top: 8px;
+}
+.delete-button{
+    color: rgb(72, 70, 70);
+    padding: 0px 10px;
+}
+.fa-remove:before, .fa-trash-can:before {
+    content: "\f2ed"!important;
+    font-size: 15px;
+}
+.fa-remove:hover {
+    color: rgb(186, 30, 30);
+}
+.delete-button:hover {
+    color: rgb(246, 5, 5);
+    padding: 0px 10px;
+    cursor: pointer;
+}
+.delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.delete-button i {
+    font-size: 18px;
+    color: red;
+    margin-left: 115px;
+    margin-top: 0px;
+}
+@media only screen and (min-width: 768px) and (max-width: 1200px){
+    .folder-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+}
+@media (max-width: 768px) {
+    .humburger-user-info .sidepanel {
+        display: block;
+    }
+    .sidebar {
+        display: none;
+    }
+    .sidebar.active {
+        display: block;
+    }
+    .humburger-user-info .icon-container {
+    display: block;
+}
+.folder p{
+    font-size: 10px;
+    text-align: justify;
+}
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+}

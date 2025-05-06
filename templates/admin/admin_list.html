@@ -1,0 +1,47 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive2 %}dashboardactive {% endblock %}
+{% block nav %}
+  <!-- Main Content -->
+  <div id="main-content" class="p-4">
+    <!-- Button Container -->
+    <div class="button-container">
+      <ul class="nav nav-tabs">
+        <a href="{% url 'list_of_client' %}" class="btn btn-outline-primary active mb-2 me-4">Client List</a>
+      </ul>
+    </div>
+    {% endblock %}
+    {% block content %}
+    <div class="container-fluid mt-5">
+      <div class="row">
+        <div class="col-12">
+          <div class="table-responsive">
+            <table class="table request-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Name.</th>
+                  <th>Mobile Number</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for obj in object_list %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td><a href="{% url 'list_of_client' obj.id %}">{{ obj.get_full_name }}</a></td>
+                  <td>{{ obj.mobile }}</td>
+                  <td>{{ obj.email }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}
+</body>
+
+</html>

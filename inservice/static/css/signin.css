@@ -1,0 +1,143 @@
+.signup-container{
+    background-image: url('/media/signup/signup_bg.png');
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.signup-subcontainer{
+    display: grid;
+    grid-template-columns: 6fr 6fr;
+    width: 70%;
+  
+}
+.p-lg-5 {
+    padding: 0rem!important;
+}
+.signup-left{
+    width: 100%;
+    height: 100%;
+}
+.signup-left img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+.signup-right{
+    background-color: #FFFFFF;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    padding: 35px;
+   
+}
+.signup-right div{
+    margin-bottom: 10px;
+}
+label{
+    margin-bottom: 10px;
+}
+.bi-person{
+    position: absolute;
+    left: 5px;
+    color: #969696;
+    margin-top: 5px;
+   
+}
+.bi-lock{
+    position: absolute;
+    left: 5px;
+    color: #969696;
+    justify-content: center;
+    margin-top: 5px;
+}
+.inputField{
+    position: relative;
+}
+.inputField input{
+    width: 100%;
+    background-color: #F7F7F7;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+   
+}
+.inputField input:focus{
+ outline: none;
+   
+}
+.inputField input::placeholder{
+    position: absolute;
+    left: 25px;
+    color: #969696;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Cabin", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+      justify-content: center;
+
+}
+.btnSignin{
+    background-image: linear-gradient(to bottom right,#02955F, #083778);
+    border: none;
+    width: 100%;
+    color: #FFFFFF;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+
+}
+.btnSignin:hover{
+    background-image: linear-gradient(to bottom right, #083778,#02955F);
+
+}
+.userName{
+    color: #02A66A;
+    font-size: 32px;
+  font-family: "Poppins", serif;
+  font-weight: 500;
+  font-style: normal;
+
+}
+.signinText{
+    color: #1A1A1A;
+    font-size: 16px;
+    font-family: "Poppins", serif;
+    font-weight: 500;
+    font-style: normal;
+
+}
+.inputField label{
+    color: #1A1A1A;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: "Cabin", serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-variation-settings:
+      "wdth" 100;
+}
+.forgotText a{
+    text-decoration: none;
+    color: #02A66A;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Poppins", serif;
+    font-style: normal;
+}
+@media only screen and (max-width: 375px) {
+.signup-right {
+    background-color: #FFFFFF;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    margin-left: -30px;
+    padding: 35px;
+}
+}

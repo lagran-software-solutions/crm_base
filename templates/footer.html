@@ -1,0 +1,87 @@
+<div class="footer-container">
+    <div class="footer-subcontainer">
+        <div class="col">
+            {% for footer in footer %}
+            <div><img src="/media/BFS_logo.png" /></div>
+            <div class="col-desc">
+                {{ footer.description }}
+            </div>
+            <div class="col-icons">
+      <a href="{{ footer.facebook_link}}" target="_blank"><span class="bi bi-facebook"></span></a>
+         <a href="{{ footer.twitter_link}}" target="_blank"><span class="bi bi-twitter-x"> </span></a>
+         <a href="{{ footer.linkedIn_link}}" target="_blank"><span class="bi bi-linkedin">  </span></a>
+         <a href="{{ footer.instagram_link}}" target="_blank"><span class="bi bi-instagram"> </span></a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col">
+            <div class="col-title">Our Services</div>
+            {% for footer in footer %}
+            <div>{{ footer.service1 }}</div>
+            <div>{{ footer.service2 }}</div>
+            <div>{{ footer.service3 }}</div>
+            <div>{{ footer.service4 }}</div>
+            {% endfor %}
+        </div>
+
+        <div class="col">
+            <div class="col-title">Get Support</div>
+           <a style="text-decoration: none" href="{%url 'contact'%}"><div>Reach Us</div></a>
+           <a style="text-decoration: none" href="{%url 'contact' %}"><div>Privacy Policy</div></a>
+        </div>
+
+        <div class="col">
+            <div class="col-title">Get Weekly Updates</div>
+            <div class="footerEmail">
+                <input type="email" id="subscriptionEmail" name="email" placeholder="Enter Email Address" required />
+            </div>
+            <div>
+                <button class="btnSubscribe" id="subscribeBtn">Subscribe</button>
+            </div>
+            <small class="error-message" id="emailError"></small>
+            <p id="subscribeResponse" style="color: green;"></p>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("#subscribeBtn").click(function (e) {
+                    e.preventDefault();
+
+                    var email = $("#subscriptionEmail").val().trim();
+                    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                    if (!emailRegex.test(email)) {
+                        $("#emailError").text("Please enter a valid email address.").css("color", "red");
+                        return;
+                    } else {
+                        $("#emailError").text("");
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'subscribe' %}",  // Update with your actual URL name
+                        data: {
+                            email: email,
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                        },
+                        success: function (response) {
+                            $("#subscribeResponse").text(response.message).css("color", "green");
+                            $("#subscriptionEmail").val(""); // Clear input after successful submission
+                        },
+                        error: function () {
+                            $("#subscribeResponse").text("Email already subscribed.").css("color", "green");
+                        }
+                    });
+                });
+            });
+        </script>
+    
+        <style>
+            .error-message {
+                color: red;
+                font-size: 12px;
+            }
+        </style>
+    </div>
+</div>

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Beleibtfn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            margin: auto;
+            padding: 10px;
+        }
+     
+        .field {
+            margin-bottom: 15px;
+        }
+      
+        
+        .logo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+      
+        <!-- <h2>Beliebtfn</h2> -->
+        <div class="field">
+            <span class="label">Name:</span>
+            <span class="value">{{ name }}</span>
+        </div>
+        <div class="field">
+            <span class="label">Email:</span>
+            <span class="value">{{ email }}</span>
+        </div>
+
+        <div class="field">
+            <span class="label">Message:</span>
+            <span class="value">{{ message }}</span>
+        </div>
+        <img src="https://beliebtfin.com/static/img/logo/footer-logo-1.png" alt="Logo" class="logo">
+    </div>
+</body>
+</html>

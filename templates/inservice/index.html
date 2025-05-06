@@ -1,0 +1,567 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Home</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+	<link rel="stylesheet"
+		href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="{% static 'css/Home.css' %}" />
+	<link rel="icon" href="{% static 'img/BFS_logo.png' %}" type="image/png">
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,100..900;1,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+		rel="stylesheet" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,100..900;1,100..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik:ital,wght@0,300..900;1,300..900&family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap"
+		rel="stylesheet" />
+	{% comment %} bootstrap cdn links {% endcomment %}
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+		crossorigin="anonymous"></script>
+</head>
+
+<body>
+	<header>
+
+
+		<div><img src="/media/BFS_logo.png" /></div>
+		<div><span class="bi bi-justify " data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+				aria-controls="offcanvasExample"></span></div>
+
+		<div class="menu-list">
+			<span><a href="{% url 'home' %}">Home</a></span>
+			<span><a href="{% url 'about' %}">About Us</a></span>
+			<span><a href="{% url 'services' %}">Services</a></span>
+			<span><a href="{% url 'team' %}">Team</a></span>
+			<span><a href="{% url 'contact' %}">Contact Us</a></span>
+		</div>
+		<div class="btnSigncont">
+			<button class="btnSign"><a href="{% url 'login' %}">Sign In</a></button>
+		</div>
+		<!-- off canvas -->
+
+
+
+		<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+			aria-labelledby="offcanvasExampleLabel">
+			<div class="offcanvas-header">
+
+				<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+			</div>
+			<div class="offcanvas-body">
+				<div class="mobile-menuList">
+					<div><a href="{% url 'home' %}"><span class="bi bi-house-door me-2"></span>Home</a></div>
+					<div><a href="{% url 'about' %}"><span class="bi bi-info-circle me-2"></span>About Us</a></div>
+					<div><a href="{% url 'services' %}"><span class="bi bi-truck me-2"></span>Services</a></div>
+					<div><a href="{% url 'team' %}"><span class="bi bi-people me-2"></span>Team</a></div>
+					<div><a href="{% url 'contact' %}"><span class="bi bi-person-rolodex me-2"></span>Contact Us</a></div>
+					<div><button class="btnSignMobile"><a href="{% url 'login' %}">Sign In</a></button></div>
+				</div>				
+			</div>
+		</div>
+	</header>
+	<!-- Banner -->
+	<div class="banner-container">
+		<div id="carouselExampleCaptions" class="carousel slide">
+			<div class="carousel-inner">
+				<div class="carousel-item active">
+					<img src="/media/home/banner1.png" class="d-block w-100" alt="..." />
+					<div class="carousel-caption ">
+						<p class="banner-subtitle">Tax Planning & Compliance</p>
+						<p class="banner-title">Insolvency Advisory Service</p>
+						<button class="btnBanner" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							Get In Touch<span class="bi bi-arrow-right ms-2"></span>
+						</button>
+					</div>
+				</div>
+				<div class="carousel-item">
+					<img src="/media/home/banner2.png" class="d-block w-100" alt="..." />
+					<div class="carousel-caption  d-md-block">
+						<p class="banner-subtitle">Tax Planning & Compliance</p>
+						<p class="banner-title">Tax Planning & Compliance</p>
+						<button class="btnBanner" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							Get In Touch<span class="bi bi-arrow-right ms-2"></span>
+						</button>
+					</div>
+				</div>
+				<div class="carousel-item">
+					<img src="/media/home/banner3.png" class="d-block w-100" alt="..." />
+					<div class="carousel-caption  d-md-block">
+						<p class="banner-subtitle">Financial Investment</p>
+						<p class="banner-title">Financial Investment</p>
+						<button class="btnBanner" data-bs-toggle="modal" data-bs-target="#exampleModal">
+							Get In Touch<span class="bi bi-arrow-right ms-2"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+			<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+				data-bs-slide="prev">
+				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Previous</span>
+			</button>
+			<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+				data-bs-slide="next">
+				<span class="carousel-control-next-icon" aria-hidden="true"></span>
+				<span class="visually-hidden">Next</span>
+			</button>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="contact-container">
+						<div class="contact-left">
+							<div><img src="/media/BFS_logo.png"></div>
+							<div class="contact-title">Catch Us Here</div>
+							<div class="contact-subtitle">
+								Get in Touch for Expert Financial Guidance
+							</div>
+							<div class="contact-desc">
+								we're dedicated to delivering personalized financial solutions with
+								expertise and integrity, whether you're an individual or a business.
+							</div>
+							<div class="contact-mail">
+								<span class="bi bi-envelope-at me-2"
+									style="color: #02a66a"></span>{{contact.email}}
+							</div>
+							<div class="contact-mobile">
+								<span class="bi bi-whatsapp me-2" style="color: #02a66a"></span>{{contact.whatsapp_no}}
+							</div>
+							<div class="contact-mobile">
+								<span class="bi bi-telephone me-2" style="color: #02a66a"></span>{{contact.mobile_no}}
+							</div>
+						</div>
+						<div class="contact-right">
+							<div class="form-title">Make custom request</div>
+							<div class="form-subtitle">Tell about your project</div>
+							<form id="reachusForm">
+								<div>
+									<label>Full Name</label>
+									<div class="inputField">
+										<span class="bi bi-person"></span>
+										<input type="text" id="name" name="name" placeholder="Enter Full Name" required
+											pattern="[A-Za-z\s]+" title="Only alphabets and spaces are allowed" />
+									</div>
+									<small class="error-message" id="nameError"></small>
+								</div>
+
+								<script>
+									document.getElementById("name").addEventListener("input", function () {
+										this.value = this.value.replace(/[^A-Za-z\s]/g, "");
+									});
+								</script>
+
+								<style>
+									.error-message {
+										color: red;
+										font-size: 12px;
+									}
+								</style>
+								<div>
+									<label>Email Address</label>
+									<div class="inputField">
+										<span class="bi bi-envelope"></span>
+										<input type="email" id="email" name="email" placeholder="Enter Email Address"
+											required />
+									</div>
+								</div>
+								<div>
+									<label>Your Message</label>
+									<div class="inputField">
+										<span class="bi bi-chat-left-text"></span>
+										<textarea id="message" name="message" placeholder="Type here"
+											required></textarea>
+									</div>
+								</div>
+								<div>
+									<button type="submit" class="btnSignin">Get a Quote</button>
+								</div>
+							</form>
+							<p id="responseMessage" style="color: green;"></p>
+							<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+							<script>
+								document.querySelectorAll(".inputField input, .inputField textarea").forEach(input => {
+									input.addEventListener("focus", function () {
+										let icon = this.previousElementSibling; // Selects the icon before the input
+										if (icon && icon.classList.contains("bi")) {
+											icon.style.opacity = "0"; // Hide icon when input is focused
+											icon.style.pointerEvents = "none"; // Disable interactions
+										}
+										if (!this.dataset.placeholder) {
+											this.dataset.placeholder = this.placeholder; // Store original placeholder only once
+										}
+										this.placeholder = ""; // Remove placeholder when focused
+									});
+								
+									input.addEventListener("blur", function () {
+										let icon = this.previousElementSibling;
+										if (icon && icon.classList.contains("bi")) {
+											if (this.value.trim() === "") {
+												// If input is empty, restore icon and placeholder
+												icon.style.opacity = "1";
+												icon.style.pointerEvents = "auto";
+												this.placeholder = this.dataset.placeholder || ""; // Restore placeholder safely
+											}
+										}
+									});
+								});
+				
+							</script>
+							
+							<script>
+								$(document).ready(function () {
+									$("#reachusForm").submit(function (e) {
+										e.preventDefault();
+
+										$.ajax({
+											type: "POST",
+											url: "{% url 'reachus' %}",
+											data: {
+												name: $("#name").val(),
+												email: $("#email").val(),
+												message: $("#message").val(),
+												csrfmiddlewaretoken: "{{ csrf_token }}",
+											},
+											success: function (response) {
+												$("#responseMessage").text(response.message);
+												$("#reachusForm")[0].reset();
+											},
+											error: function (xhr) {
+												$("#responseMessage").text("Error submitting the form.");
+											}
+										});
+									});
+								});
+							</script>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- About section -->
+	<div class="about-container">
+		<div class="about-subcontainer">
+			<div class="about-content">
+				<div class="about-title">About Us</div>
+			
+				<div class="about-subtitle">
+					{{Aboutgallery.title}}
+				</div>
+				<div class="about-desc">
+					{{Aboutgallery.description}}
+				</div>
+				<div class="btnGetCont">
+					<button class="btnBanner" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						Get In Touch<span class="bi bi-arrow-right ms-2"></span>
+					</button>
+				</div>
+			</div>
+			<div class="aboutImg">
+				<div class="front">
+					<img src="{{Aboutgallery.image.url}}" />
+				</div>
+				<div class="back">
+					<img src="/media/home/leaf.png" />
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Know more about -->
+	<div class="know-contaner">
+		<div class="know-title">Know More About Us</div>
+		<div class="know-cards-part">
+			<div class="know-card1">
+				<div class="know-card-title">OUR TEAM</div>
+				<div class="know-hover">
+					<div class="know-hover-content">
+						<div><img src="/media/home/teamImg.png" /></div>
+						<div class="hover-title">OUR TEAM</div>
+						<div class="hover-subtitle">Meet Our Expert Team</div>
+						<div><a href="{% url 'team' %}"><img src="/media/home/knowArrow.png" /></a></div>
+					</div>
+				</div>
+			</div>
+			<div class="know-card2">
+				<div class="know-card-title">OUR VISION</div>
+				<div class="know-hover">
+					<div class="know-hover-content">
+						<div><img src="/media/home/visionImg.png" /></div>
+						<div class="hover-title">OUR VISION</div>
+						<div class="hover-subtitle">Inspiring Financial Prosperity</div>
+						<div><a href="{% url 'about' %}"><img src="/media/home/knowArrow.png" /></a></div>
+					</div>
+				</div>
+			</div>
+			<div class="know-card3">
+				<div class="know-card-title">OUR MISSION</div>
+				<div class="know-hover">
+					<div class="know-hover-content">
+						<div><img src="/media/home/missionImg.png" /></div>
+						<div class="hover-title">OUR MISSION</div>
+						<div class="hover-subtitle">Financial Success Together</div>
+						<div><a href="{% url 'about' %}"><img src="/media/home/knowArrow.png" /></a></div>
+					</div>
+				</div>
+			</div>
+			<div class="know-card4">
+				<div class="know-card-title">OUR GOAL</div>
+				<div class="know-hover">
+					<div class="know-hover-content">
+						<div><img src="/media/home/goalImg.png" /></div>
+						<div class="hover-title">OUR GOAL</div>
+						<div class="hover-subtitle">Empowering Financial Success</div>
+						<div><a href="{% url 'about' %}"><img src="/media/home/knowArrow.png" /></a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Services section -->
+	<div class="service-container">
+		<div class="service-title">Services</div>
+		<div>
+			<span class="service-subtitle">Our Services</span>
+			<span class="service-viewall float-end"><a href="{% url 'services' %}">View all <span
+						class="bi bi-arrow-right"></span></a></span>
+		</div>
+
+		
+			<div class="service-card-part">
+				{% for service in service_list  %}
+				<div class="service-card">
+					<div class="service-card-content">
+						<div class="service-card-title">
+							{{service.title}}
+						</div>
+						<div class="service-card-subtitle">
+							{{service.smalldiscription}}
+						</div>
+						<div class="service-card-read">
+							<a href="{% url 'services' %}">Read More <span class="bi bi-arrow-right ms-2"></span></a>
+						</div>
+					</div>
+					<div class="serviceImg">
+						<img src="{{service.pageheader_image.url}}" />
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	<!-- take the first step -->
+	<div class="take-container">
+		<div class="take-subcontainer">
+			<div>&nbsp;</div>
+			<div class="take-content">
+				<div class="take-title">
+					Take the First Step Towards Financial Freedom
+				</div>
+				<div>
+					<button class="btnBanner" data-bs-toggle="modal" data-bs-target="#exampleModal">
+						Get In Touch<span class="bi bi-arrow-right ms-2"></span>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- why us -->
+	<div class="why-container">
+		<div class="why-subcontainer">
+			<div class="why-content">
+				<div class="why-title">Why Us?</div>
+				<div class="why-subtitle">
+					Driving Financial Growth with Confidence
+				</div>
+				<div class="why-desc">
+					At Beliebt, you're not just another client — you're a valued partner
+					on the path to financial prosperity.
+				</div>
+				<div class="why-grid">
+					<div class="why-subgrid">
+						<div class="why-subgrid-title">
+							<span class="me-3"><img src="/media/home/suitcase.png" /></span><span>10+</span>
+						</div>
+						<div class="why-subgrid-desc">Years experience</div>
+					</div>
+					<div class="why-subgrid">
+						<div class="why-subgrid-title">
+							<span class="me-3"><img src="/media/home/client.png" /></span><span>20+</span>
+						</div>
+						<div class="why-subgrid-desc">Happy Clients</div>
+					</div>
+				</div>
+			</div>
+			<div class="aboutImg">
+				<div class="front">
+					<img src="/media/home/whyImg.png" />
+				</div>
+				<div class="back">
+					<img src="/media/home/leaf.png" />
+				</div>
+			</div>
+
+			<!-- <div class="whyImg"><img src="../images/home/whyImg.png" /></div> -->
+		</div>
+	</div>
+	<!-- client names -->
+	<div class="client-container">
+		<div class="client-title">Happy User’s</div>
+		<div class="client-list">
+			{% for happy_user in happy_users   %}
+			<div class="clientImg"><img src="{{ happy_user.logo.url}}" alt="{{happy_user.logo_title}}" /></div>
+			{% endfor %}
+		</div>
+	</div>
+		
+	<!-- contact section -->
+	<div class="contact-container">
+		<div class="contact-left">
+			<div class="contact-title">Catch Us Here</div>
+			<div class="contact-subtitle">
+				Get in Touch for Expert Financial Guidance
+			</div>
+			<div class="contact-desc">
+				we're dedicated to delivering personalized financial solutions with
+				expertise and integrity, whether you're an individual or a business.
+			</div>
+			<div class="contact-mail">
+				<span class="bi bi-envelope-at me-2" style="color: #02a66a"></span>{{contact.email}}
+			</div>
+			<div class="contact-mobile">
+				<span class="bi bi-whatsapp me-2" style="color: #02a66a"></span>{{contact.whatsapp_no}}
+			</div>
+			<div class="contact-mobile">
+				<span class="bi bi-telephone me-2" style="color: #02a66a"></span>{{contact.mobile_no}}
+			</div>
+		</div>
+		<div class="contact-right">
+			<div class="form-title">Make custom request</div>
+			<div class="form-subtitle">Tell about your project</div>
+			<form class="reachusForm">
+				<div>
+					<label>Full Name</label>
+					<div class="inputField">
+						<span class="bi bi-person"></span>
+						<input type="text" id="name" name="name" class="name" placeholder="Enter Full Name" required
+							pattern="[A-Za-z\s]+" title="Only alphabets and spaces are allowed" />
+					</div>
+					<small class="error-message" id="nameError"></small>
+				</div>
+
+				<script>
+					document.getElementById("name").addEventListener("input", function () {
+						this.value = this.value.replace(/[^A-Za-z\s]/g, "");
+					});
+				</script>
+
+				<style>
+					.error-message {
+						color: red;
+						font-size: 12px;
+					}
+				</style>
+				<div>
+					<label>Email Address</label>
+					<div class="inputField">
+						<span class="bi bi-envelope"></span>
+						<input type="email" id="email" name="email" class="email" placeholder="Enter Email Address" required />
+					</div>
+				</div>
+				<div>
+					<label>Your Message</label>
+					<div class="inputField">
+						<span class="bi bi-chat-left-text"></span>
+						<textarea id="message" name="message" class="message" placeholder="Type here" required></textarea>
+					</div>
+				</div>
+				<div>
+					<button type="submit" class="btnSignin">Get a Quote</button>
+				</div>
+			</form>
+			<p id="responseMessage" class="responseMessage" style="color: green;"></p>
+			<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	
+			<script>
+			  document.querySelectorAll(".inputField input, .inputField textarea").forEach(input => {
+				input.addEventListener("focus", function () {
+				  let icon = this.previousElementSibling; // Selects the icon before the input
+				  if (icon && icon.classList.contains("bi")) {
+					icon.style.opacity = "0"; // Hide icon when input is focused
+					icon.style.pointerEvents = "none"; // Disable interactions
+				  }
+				  if (!this.dataset.placeholder) {
+					this.dataset.placeholder = this.placeholder; // Store original placeholder only once
+				  }
+				  this.placeholder = ""; // Remove placeholder when focused
+				});
+			  
+				input.addEventListener("blur", function () {
+				  let icon = this.previousElementSibling;
+				  if (icon && icon.classList.contains("bi")) {
+					if (this.value.trim() === "") {
+					  // If input is empty, restore icon and placeholder
+					  icon.style.opacity = "1";
+					  icon.style.pointerEvents = "auto";
+					  this.placeholder = this.dataset.placeholder || ""; // Restore placeholder safely
+					}
+				  }
+				});
+			  });
+	  
+		  </script>
+		  
+			<script>
+			  $(document).ready(function () {
+				$(".reachusForm").submit(function (e) {
+				  e.preventDefault(); 
+	
+				  $.ajax({
+					type: "POST",
+					url: "{% url 'reachus' %}",
+					data: {
+					  name: $(".name").val(),
+					  email: $(".email").val(),
+					  message: $(".message").val(),
+					  csrfmiddlewaretoken: "{{ csrf_token }}",
+					},
+					success: function (response) {
+					  $(".responseMessage").text(response.message);
+					  $(".reachusForm")[0].reset();
+					},
+					error: function (xhr) {
+					  $(".responseMessage").text("Error submitting the form.");
+					}
+				  });
+				});
+			  });
+			</script>
+		</div>
+	</div>
+	
+	<!-- footer section -->
+	{% include "footer.html" %}
+	
+</body>
+
+</html>

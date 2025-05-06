@@ -1,0 +1,178 @@
+{% extends "base_dashboard.html" %}
+{% load static %}
+{% block navactive6 %}dashboardactive {% endblock %}
+
+
+{% block content %}
+
+<div class="container my-4 admin-container" style="padding: 100px;">
+    <div class="row g-4">
+
+        <!-- New Company Cart Creation Form -->
+        <div class="col-md-12">
+            <div class="card p-4">
+                <h5 class="card-title text-center">   {% if is_update %}  Update Employee Profile {% else %}Create New Employee {% endif %}</h5>
+                <form id="newCompanyCartForm" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+            
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        
+                        <!-- Check if the current field is a password field -->
+                        {% if field.name == "password" or field.name == "confirm_password" %}
+                            <div class="input-group">
+                                {{ field }}
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-toggle="{{ field.id_for_label }}">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        
+                        <!-- Display field errors -->
+                        {% if field.errors %}
+                            <div class="alert alert-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+{% endfor %}
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-100 mt-3">
+                        <i class="fas fa-plus"></i> {% if is_update %}  Update Employee Profile {% else %}Create New Employee {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("newCompanyCartForm");
+        const fields = form.querySelectorAll("input, select, textarea");
+    
+        fields.forEach((field) => {
+            // Add real-time validation on 'input' and 'blur' events
+            field.addEventListener("input", () => validateField(field));
+            field.addEventListener("blur", () => validateField(field));
+        });
+    
+        form.addEventListener("submit", (e) => {
+            let formIsValid = true;
+    
+            fields.forEach((field) => {
+                if (!validateField(field)) {
+                    formIsValid = false;
+                }
+            });
+    
+            if (!formIsValid) {
+                e.preventDefault();
+            }
+        });
+    
+        function validateField(field) {
+            const errorMessage = field.parentNode.querySelector(".error-message") || createErrorMessage(field);
+            let valid = true;
+    
+            // Validation rules based on field name
+            switch (field.name) {
+                case "email":
+                    valid = validateEmail(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid email address.";
+                    break;
+                case "mobile":
+                    valid = validateMobile(field.value);
+                    errorMessage.textContent = valid ? "" : "Please enter a valid mobile number (10 digits).";
+                    break;
+                case "password":
+                    if (field.value) { 
+                        valid = field.value.length >= 8;
+                        errorMessage.textContent = valid ? "" : "Password must be at least 8 characters.";
+                    } else {
+                        valid = true; 
+                    }
+                    break;
+                case "confirm_password":
+                    const password = form.querySelector("input[name='password']").value;
+                    if (password) { 
+                        valid = field.value === password;
+                        errorMessage.textContent = valid ? "" : "Passwords do not match.";
+                    } else {
+                        valid = true;
+                    }
+                    break;
+
+            }
+    
+            errorMessage.style.display = valid ? "none" : "block";
+            return valid;
+        }
+    
+        // Helper functions for specific validations
+        function validateEmail(email) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(email);
+        }
+    
+        function validateMobile(mobile) {
+            const mobilePattern = /^\d{10}$/;
+            return mobilePattern.test(mobile);
+        }
+    
+    
+        // Helper to create an error message container
+        function createErrorMessage(field) {
+            const errorMessage = document.createElement("div");
+            errorMessage.className = "error-message text-danger";
+            errorMessage.style.display = "none";
+            field.parentNode.appendChild(errorMessage);
+            return errorMessage;
+        }
+    });
+    
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateOfJoiningField = document.getElementById("id_date_of_joining");
+        const dateOfBirthField = document.getElementById("id_date_of_birth");
+    
+        // Set maximum date for Date of Joining as today's date
+        const today = new Date().toISOString().split("T")[0];
+        dateOfJoiningField.setAttribute("max", today);
+    
+        // Set maximum date for Date of Birth as 18 years ago
+        const eighteenYearsAgo = new Date();
+        eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+        dateOfBirthField.setAttribute("max", eighteenYearsAgo.toISOString().split("T")[0]);
+    });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.toggle-password').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const inputId = this.getAttribute('data-toggle');
+                const inputField = document.getElementById(inputId);
+    
+                if (inputField.type === 'password') {
+                    inputField.type = 'text';
+                    this.querySelector('i').classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    inputField.type = 'password';
+                    this.querySelector('i').classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        });
+    });
+
+</script>
+
+
+{% endblock %}

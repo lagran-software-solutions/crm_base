@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-vfvvc^1cv@@m_8cy*9+w-x@$q968cb4d)8ov*x#^3b%4o*-19c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["dev.fincrmfin.com",'*']
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'inservice.CustomUser'
 

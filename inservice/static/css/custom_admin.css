@@ -210,7 +210,7 @@ display: inline-block;
 
 .menu-item a i {
   margin-right: 8px;
-  color: inherit; /* Inherit the current color of the parent (anchor) */
+  color: #004a61; /* Inherit the current color of the parent (anchor) */
   transition: color 0.3s ease;
 }
 
@@ -377,8 +377,8 @@ display: inline-block;
   top: 73px;
   left: 0;
   border-radius: 7px;
-  background-color: #004a61;
-  color: white;
+  background-color: #FFFFFF;
+  color: #004a61;
   transition: all 0.3s ease;
   z-index: 1000;
   overflow: hidden;
@@ -555,7 +555,7 @@ i.dashboardactive {
 /* Navbar styling */
 /* Navbar styling */
 .navbar {
-  background-color: #d2ffff;
+  background-color: #FFFFFF;
   position: fixed;
   top: 0;
   width: 100%;

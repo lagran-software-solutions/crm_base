@@ -377,7 +377,7 @@ display: inline-block;
   top: 73px;
   left: 0;
   border-radius: 7px;
-  background-color: #004a61;
+  background-color: white;
   color: white;
   transition: all 0.3s ease;
   z-index: 1000;
@@ -555,7 +555,7 @@ i.dashboardactive {
 /* Navbar styling */
 /* Navbar styling */
 .navbar {
-  background-color: #d2ffff;
+  background-color: #FFFFFF;
   position: fixed;
   top: 0;
   width: 100%;

@@ -99,7 +99,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #004a61;
+    background-color: #46098C;
     color: white;
     padding: 15px;
   }
@@ -140,7 +140,7 @@
   
   .message.sent {
     align-self: flex-end;
-    background-color: #004a61;
+    background-color: #46098C;
     color: white;
     border-top-right-radius: 0;
   }
@@ -179,7 +179,7 @@
   
   .chat-input .send-button {
     padding: 10px 20px;
-    background-color: #004a61;
+    background-color: #46098C;
     color: white;
     border: none;
     border-radius: 20px;
@@ -187,7 +187,7 @@
   }
   
   .chat-input .send-button:hover {
-    background-color: #004a61;
+    background-color: #46098C;
   }
   
   .back-button {
@@ -287,7 +287,7 @@
       /* top: 27%; */
       left: 0;
       border-radius: 7px;
-      background-color: #004a61;
+      background-color: #46098C;
       color: white;
       transition: all 0.3s ease;
       z-index: 1000;

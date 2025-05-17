@@ -17,7 +17,7 @@
   }
 
   .action-icons .edit {
-    color: #007bff;
+    color: #46098C;
   }
 
   .action-icons .delete {
@@ -96,11 +96,11 @@
                       <input type="hidden" name="invoice_id" value="{{ obj.id }}">
                       <select name="status" class="form-select" onchange="this.form.submit()" style="
                       color: 
-                      {% if obj.status == 'empty' %} #797272; {% elif obj.status == 'pending' %} #ffc107; {% elif obj.status == 'paid' %} #198754; /* Green */
+                      {% if obj.status == 'empty' %} #797272; {% elif obj.status == 'pending' %} #ffc107; {% elif obj.status == 'paid' %} #46098C; /* Green */
                       {% elif obj.status == 'cancelled' %} #dc3545; {% else %} #ffffff; {% endif %}; font-weight: 600;" >
                       <option value="empty" {% if obj.status == "empty" %}selected{% endif %} style="color: #6c757d;">Empty</option>
                       <option value="pending" {% if obj.status == "pending" %}selected{% endif %} style="color: #ffc107;">Pending</option>
-                      <option value="paid" {% if obj.status == "paid" %}selected{% endif %} style="color: #198754;">Paid</option>
+                      <option value="paid" {% if obj.status == "paid" %}selected{% endif %} style="color: #46098C;">Paid</option>
                       <option value="cancelled" {% if obj.status == "cancelled" %}selected{% endif %} style="color: #dc3545;">Cancelled</option>
                   </select>
                   </form>

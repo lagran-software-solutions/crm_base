@@ -31,7 +31,7 @@
     /* OK button styling */
     #popup-ok-button {
         padding: 10px 20px;
-        background-color: #007bff;
+        background-color: #46098C;
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -160,7 +160,7 @@ display: inline-block;
 
 #vertical-nav.expanded ul li.menu-item:hover a {
   background-color: white;
-  color: #004a61;
+  color: #46098C;
   transform: scale(1.05);
 }
 
@@ -182,7 +182,7 @@ display: inline-block;
 }
 
 #vertical-nav ul li.dashboardactive i {
-  color: #004a61;
+  color: #46098C;
   margin-left: 3px;
 }
 
@@ -194,7 +194,7 @@ display: inline-block;
 
 #vertical-nav.expanded ul li.dashboardactive {
   background-color: white;
-  color: #004a61;
+  color: #46098C;
   transform: scale(1.05);
 }
 
@@ -202,7 +202,7 @@ display: inline-block;
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: inherit;
+  color: #46098C;
   background-color: transparent;
   transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   border-radius: 5px; /* Optional: rounded corners */
@@ -210,7 +210,7 @@ display: inline-block;
 
 .menu-item a i {
   margin-right: 8px;
-  color: #004a61; /* Inherit the current color of the parent (anchor) */
+  color: #46098C; /* Inherit the current color of the parent (anchor) */
   transition: color 0.3s ease;
 }
 
@@ -253,13 +253,13 @@ display: inline-block;
 
   .date-filter input[type="date"]:focus {
     box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-    border-color: #007bff;
+    border-color: #46098C;
   }
 
   .go-button {
     padding: 8px 15px;
     border-radius: 6px;
-    background-color: #007bff;
+    background-color: #46098C;
     color: white;
     border: none;
     font-weight: bold;
@@ -341,11 +341,11 @@ display: inline-block;
   }
 
 .menu-item:hover a i {
-  color: #004a61;
+  color: #46098C;
 }
 
 .menu-item:hover a span {
-  color: #004a61;
+  color: #46098C;
 }
 
 .btn {
@@ -363,7 +363,7 @@ display: inline-block;
 }
 
 .btn a {
-  color: #0d6efd;
+  color: #46098C;
   font-weight: 500;
 }
 .btn.active a {
@@ -469,7 +469,7 @@ i.dashboardactive {
 }
 
 #vertical-nav ul li a {
-  color: white;
+
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -573,7 +573,7 @@ i.dashboardactive {
 }
 
 .menu-toggle {
-  background-color: #004a61;
+  background-color: #46098C;
   color: #fff;
   font-size: 24px;
   display: flex;
@@ -636,7 +636,7 @@ i.dashboardactive {
   transform: translateY(-50%);
   border: none;
   height: 32px;
-  background-color: #8eccff;
+  background-color: #46098C;
   color: #fff;
   width: 60px;
   border-radius: 0 4px 4px 0;
@@ -871,13 +871,13 @@ i.dashboardactive {
   margin: 0 10px;
   border: none;
   border-radius: 5px;
-  background-color: #8eccff;
+  background-color: #46098C;
   color: #fff;
   transition: background-color 0.3s ease;
 }
 
 .button-container .nav-item .nav-link.active {
-  background-color: #007bff;
+  background-color: #46098C;
   color: #fff;
 }
 
@@ -1038,7 +1038,7 @@ i.dashboardactive {
 }
 
 .uploadmedia-table tbody tr:hover {
-  background-color: #e9ecef;
+  background-color: #46098C;
 }
 
 .uploadmedia-table tbody tr:last-child {
@@ -1087,7 +1087,7 @@ tbody {
 }
 
 .request-table tbody tr:hover {
-  background-color: #e9ecef;
+  background-color: #46098C;
 }
 
 .request-table tbody tr:last-child {
@@ -1095,7 +1095,7 @@ tbody {
 }
 
 .btn-folder {
-  background-color: #007bff;
+  background-color: #46098C;
   color: white;
   border-radius: 5px;
   padding: 5px 10px;

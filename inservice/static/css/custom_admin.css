@@ -152,7 +152,7 @@ display: inline-block;
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: inherit;
+  color: #46098C;
   background-color: transparent;
   transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   border-radius: 5px; /* Optional: rounded corners */
@@ -160,7 +160,7 @@ display: inline-block;
 
 #vertical-nav.expanded ul li.menu-item:hover a {
   background-color: white;
-  color: #46098C;
+  color: #004a61;
   transform: scale(1.05);
 }
 
@@ -194,7 +194,7 @@ display: inline-block;
 
 #vertical-nav.expanded ul li.dashboardactive {
   background-color: white;
-  color: #46098C;
+  color: #004a61;
   transform: scale(1.05);
 }
 
@@ -253,7 +253,7 @@ display: inline-block;
 
   .date-filter input[type="date"]:focus {
     box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-    border-color: #46098C;
+    border-color: #007bff;
   }
 
   .go-button {
@@ -269,7 +269,7 @@ display: inline-block;
   }
 
   .go-button:hover {
-    background-color: #0056b3;
+    background-color: #46098C;
   }
 
   /* Chart title and legend */
@@ -363,7 +363,7 @@ display: inline-block;
 }
 
 .btn a {
-  color: #46098C;
+  color: #0d6efd;
   font-weight: 500;
 }
 .btn.active a {
@@ -610,7 +610,7 @@ i.dashboardactive {
 
 .search-2 i {
   font-size: 14px;
-  color: #46098C;
+  color: #020202;
 }
 
 .search-2 i.bi-search {
@@ -871,7 +871,7 @@ i.dashboardactive {
   margin: 0 10px;
   border: none;
   border-radius: 5px;
-  background-color: #8eccff;
+  background-color: #46098C;
   color: #fff;
   transition: background-color 0.3s ease;
 }
@@ -882,7 +882,7 @@ i.dashboardactive {
 }
 
 .button-container .nav-item .nav-link:hover {
-  background-color: #0056b3;
+  background-color: #46098C;
   color: #fff;
 }
 
@@ -1095,7 +1095,7 @@ tbody {
 }
 
 .btn-folder {
-  background-color: #46098C;
+  background-color: #007bff;
   color: white;
   border-radius: 5px;
   padding: 5px 10px;
@@ -1132,7 +1132,7 @@ tbody {
   margin: 0 10px;
   border: none;
   border-radius: 5px;
-  background-color: black;
+  background-color: #46098C;
   color: #fff;
   transition: background-color 0.3s ease;
   height: 41px;

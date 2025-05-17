@@ -625,7 +625,7 @@ class DashboardView(SuperAdminLoginRequiredMixin, FormMixin, ListView):
 
         context['client_status'] = self.get_client_status(client_queryset)
         context['admin_status'] = self.get_admin_status(admin_queryset)
-        print("amount" ,InvoiceRecord.objects.total_paid_amount())
+        
         context['invoice_summary'] = {
             'paid': {
                 'total': InvoiceRecord.objects.total_paid_amount(),

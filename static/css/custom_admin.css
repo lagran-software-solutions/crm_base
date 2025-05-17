@@ -210,7 +210,7 @@ display: inline-block;
 
 .menu-item a i {
   margin-right: 8px;
-  color: inherit; /* Inherit the current color of the parent (anchor) */
+  color: #004a61; /* Inherit the current color of the parent (anchor) */
   transition: color 0.3s ease;
 }
 
